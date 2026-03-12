@@ -1,0 +1,72 @@
+[
+  {
+    "id": "1",
+    "slug": "meilleure-quiche-lorraine-moselle",
+    "title": "Où manger la meilleure quiche lorraine en Moselle ?",
+    "pillar": "dossier-thematique",
+    "excerpt": "On a écumé les fourneaux de la Moselle pour trouver LA quiche parfaite. Spoiler : il y en a plusieurs.",
+    "content": "La quiche lorraine, c'est comme la madeleine de Proust version salée. Tout le monde en a une version préférée, et tout le monde pense que c'est la meilleure. On a décidé de trancher le débat (ou pas) en goûtant les quiches de 12 adresses mosellanes.\n\n## Nos critères\n\nPour juger une quiche, on a défini quatre critères essentiels : la pâte (croustillante, pas détrempée), l'appareil (crémeux, pas caoutchouteux), la garniture (lardons de qualité, pas des allumettes industrielles), et le goût d'ensemble.\n\n## Le podium\n\n### 1. Chez Mauricette, Metz\nUne quiche comme on en fait plus. Pâte maison au beurre, lardons fumés au bois de hêtre, crème fraîche de la ferme d'à côté. C'est simple, c'est parfait.\n\n### 2. La Boulangerie du Pont, Thionville\nUne version plus épaisse, presque comme un gâteau salé. Les lardons sont coupés épais et la croûte est feuilletée. Original et réussi.\n\n### 3. L'Auberge du Saulnois, Château-Salins\nIci, la quiche est revisitée avec une touche de munster affiné. Puristes, passez votre chemin. Curieux, foncez.",
+    "coverImage": { "url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&h=600&fit=crop", "alt": "Quiche lorraine dorée sortant du four", "width": 800, "height": 600 },
+    "author": "Les Tasty",
+    "publishedAt": "2026-02-15",
+    "readingTime": 6,
+    "relatedAdresses": ["chez-mauricette-winstub-metz", "auberge-du-saulnois"],
+    "tags": ["quiche lorraine", "top", "metz", "tradition"]
+  },
+  {
+    "id": "2",
+    "slug": "rencontre-chef-auberge-saulnois",
+    "title": "Rencontre avec le chef de L'Auberge du Saulnois",
+    "pillar": "rencontre",
+    "excerpt": "Il a quitté les palaces parisiens pour revenir cuisiner le gibier et les herbes de son enfance. Portrait d'un chef qui a choisi la Moselle.",
+    "content": "Quand on pousse la porte de L'Auberge du Saulnois, on ne s'attend pas à tomber sur un ancien second de chez Ducasse. Et pourtant, c'est bien là que Marc Keller a posé ses couteaux il y a trois ans.\n\n## Le retour aux sources\n\nAprès quinze ans dans les cuisines parisiennes, Marc a ressenti le besoin de revenir. \"Je cuisinais des produits extraordinaires, mais ils venaient du bout du monde. Ici, je sors de ma cuisine et je cueille mes herbes. Mon gibier vient de la forêt d'à côté.\"\n\n## Une philosophie du local radical\n\nPas de carte fixe ici. Le menu change chaque semaine en fonction de ce que la nature et les producteurs locaux proposent. \"Je ne commande rien. Je reçois ce qu'on m'apporte et je compose.\"\n\n## Le plat signature\n\nSi vous avez la chance de venir quand c'est la saison, ne manquez pas le pigeonneau rôti au miel de sapin. Un plat qui résume toute sa philosophie en une assiette.",
+    "coverImage": { "url": "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=800&h=600&fit=crop", "alt": "Chef dans sa cuisine", "width": 800, "height": 600 },
+    "author": "Les Tasty",
+    "publishedAt": "2026-01-28",
+    "readingTime": 5,
+    "relatedAdresses": ["auberge-du-saulnois"],
+    "tags": ["chef", "portrait", "terroir", "cuisine locale"]
+  },
+  {
+    "id": "3",
+    "slug": "top-5-terrasses-ete-metz",
+    "title": "Top 5 des terrasses de l'été à Metz",
+    "pillar": "dossier-thematique",
+    "excerpt": "L'été à Metz, c'est sacré. Voici nos cinq terrasses préférées pour profiter du soleil mosellan, verre à la main.",
+    "content": "Quand le soleil pointe enfin son nez au-dessus de la cathédrale Saint-Étienne, les Messins ont un réflexe pavlovien : chercher LA terrasse parfaite. On vous a facilité le travail.\n\n## 1. Salon Madeleine — Place Sainte-Croix\nLa terrasse la plus photogénique de Metz. Vue sur la cathédrale, chaises en rotin, et une carte de thés glacés maison qui change tout l'été.\n\n## 2. La Table du Quai — Bord de Moselle\nLes pieds (presque) dans l'eau. Planches apéro généreuses et cocktails signature avec des sirops artisanaux.\n\n## 3. Le Troquet de la Place — Place Saint-Jacques\nL'ambiance est festive, les prix sont doux, et la carte de vins mosellans est surprenante.\n\n## 4. Chez Mauricette — Vieux Metz\nOui, encore elle. Leur petite cour intérieure est un secret bien gardé. Dix tables maximum, un tilleul centenaire, et des flammes au feu de bois.\n\n## 5. Le Rooftop du Pontiffroy\nLe nouveau venu. Vue panoramique sur les toits de Metz, DJ sets le vendredi soir, et une carte tapas bien pensée.",
+    "coverImage": { "url": "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=600&fit=crop", "alt": "Terrasse ensoleillée avec verres de vin", "width": 800, "height": 600 },
+    "author": "Les Tasty",
+    "publishedAt": "2026-03-01",
+    "readingTime": 4,
+    "relatedAdresses": ["salon-madeleine-metz", "chez-mauricette-winstub-metz"],
+    "tags": ["terrasse", "été", "metz", "top 5", "apéro"]
+  },
+  {
+    "id": "4",
+    "slug": "weekend-strasbourg-gourmand",
+    "title": "Notre week-end gourmand à Strasbourg",
+    "pillar": "echappee",
+    "excerpt": "On a traversé les Vosges pour un week-end 100% gourmand à Strasbourg. Carnet de bord de deux Mosellans en terre alsacienne.",
+    "content": "C'est l'échappée dont on rêvait depuis longtemps. Strasbourg, c'est à 1h30 de Metz, mais on avait toujours repoussé. Erreur.\n\n## Vendredi soir : arrivée et première winstub\n\nOn a posé nos valises dans le quartier de la Petite France et on s'est directement engouffrés dans une winstub. Choucroute royale pour monsieur, baeckeoffe pour madame. Verdict : c'est bon, mais notre Mauricette messine n'a rien à envier.\n\n## Samedi : le marché et la cathédrale\n\nLe marché couvert de Strasbourg est impressionnant. Fromages, charcuteries, pains d'épices... On a craqué sur un munster fermier qui a parfumé tout le coffre de la voiture au retour.\n\n## Dimanche : brunch et retour\n\nBrunch dans un café du quartier Krutenau, avec des œufs Benedict au saumon fumé local et un jus de fruits pressé minute. Le genre d'endroit qu'on aimerait avoir à Metz.",
+    "coverImage": { "url": "https://images.unsplash.com/photo-1580112613591-a4be59e156a5?w=800&h=600&fit=crop", "alt": "Strasbourg - Marché de Noël", "width": 800, "height": 600 },
+    "author": "Les Tasty",
+    "publishedAt": "2026-02-05",
+    "readingTime": 7,
+    "relatedAdresses": [],
+    "tags": ["strasbourg", "week-end", "alsace", "échappée", "winstub"]
+  },
+  {
+    "id": "5",
+    "slug": "rencontre-vignerons-moselle",
+    "title": "Les vignerons mosellans qui font revivre l'Auxerrois",
+    "pillar": "rencontre",
+    "excerpt": "Le vin de Moselle a longtemps été oublié. Une nouvelle génération de vignerons change la donne. On est allés à leur rencontre.",
+    "content": "Le vin de Moselle, on en parle peu. Coincé entre l'Alsace et la Champagne, il a longtemps joué les seconds rôles. Mais depuis quelques années, une poignée de vignerons passionnés redonnent ses lettres de noblesse au vignoble mosellan.\n\n## L'Auxerrois, le cépage roi\n\nSi la Moselle viticole devait choisir un ambassadeur, ce serait l'Auxerrois. Ce cépage blanc, cousin du Pinot Blanc, donne des vins tendres, fruités, avec une belle minéralité.\n\n## Au Domaine Les Bélier\n\nOn a passé une journée avec la famille Bélier, vignerons depuis quatre générations sur les coteaux d'Ancy-Dornot. La vue depuis leurs vignes est spectaculaire : la Moselle serpente en contrebas, les coteaux sont pentus, le travail est physique.\n\n## L'avenir du vignoble\n\nAvec le réchauffement climatique, les coteaux mosellans gagnent en maturité. Les vins deviennent plus complexes, plus structurés. Certains sommeliers parisiens commencent à s'y intéresser.",
+    "coverImage": { "url": "https://images.unsplash.com/photo-1560493676-04071c5f467b?w=800&h=600&fit=crop", "alt": "Vignobles sur les coteaux avec vue sur la vallée", "width": 800, "height": 600 },
+    "author": "Les Tasty",
+    "publishedAt": "2025-12-10",
+    "readingTime": 8,
+    "relatedAdresses": ["domaine-les-belier-vins-moselle"],
+    "tags": ["vin", "vignerons", "auxerrois", "moselle", "terroir"]
+  }
+]
