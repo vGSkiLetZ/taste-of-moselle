@@ -11,6 +11,7 @@ import TastyScore from "@/components/ui/TastyScore";
 import CategoryIcon from "@/components/ui/CategoryIcon";
 import WishlistButton from "@/components/engagement/WishlistButton";
 import ShareButton from "@/components/ui/ShareButton";
+import VisitedButton from "@/components/engagement/VisitedButton";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import ImageGallery from "@/components/ui/ImageGallery";
 import ReviewSection from "@/components/adresses/ReviewSection";
@@ -102,6 +103,7 @@ export default async function AdresseDetailPage({
           </Link>
         </div>
         <div className="absolute top-4 right-4 flex items-center gap-2">
+          <VisitedButton slug={adresse.slug} />
           <ShareButton title={adresse.name} text={adresse.petitPlus} />
           <WishlistButton slug={adresse.slug} />
         </div>

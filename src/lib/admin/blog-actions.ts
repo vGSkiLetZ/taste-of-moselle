@@ -7,6 +7,7 @@ import { blogPosts } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { requireAuth } from "./auth";
 import { slugify, getReadingTime } from "@/lib/utils";
+import { logAction } from "./log";
 
 export async function createBlogPostAction(
   _prevState: { error?: string } | null,
@@ -40,6 +41,7 @@ export async function createBlogPostAction(
       status: (formData.get("status") as string) || "draft",
       publishedAt: (formData.get("publishedAt") as string) || new Date().toISOString().split("T")[0],
     });
+    await logAction("create", "blog", id, title);
   } catch (e: any) {
     return { error: e.message || "Erreur lors de la creation" };
   }
@@ -92,6 +94,31 @@ export async function updateBlogPostAction(
   revalidatePath("/");
   revalidatePath("/blog");
   redirect("/admin/blog");
+}
+
+export async function duplicateBlogPostAction(formData: FormData): Promise<void> {
+  await requireAuth();
+  const id = formData.get("id") as string;
+  if (!id) redirect("/admin/blog");
+
+  const rows = await db.select().from(blogPosts).where(eq(blogPosts.id, id)).limit(1);
+  if (rows.length === 0) redirect("/admin/blog");
+
+  const original = rows[0];
+  const newId = crypto.randomUUID().slice(0, 8);
+
+  await db.insert(blogPosts).values({
+    ...original,
+    id: newId,
+    slug: `${original.slug}-copie`,
+    title: `${original.title} (copie)`,
+    status: "draft",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
+
+  revalidatePath("/admin/blog");
+  redirect(`/admin/blog/${newId}/edit`);
 }
 
 export async function deleteBlogPostAction(formData: FormData): Promise<void> {

@@ -4,9 +4,9 @@ import DeleteButton from "@/components/admin/DeleteButton";
 import { db } from "@/lib/db";
 import { blogPosts } from "@/lib/db/schema";
 import { desc } from "drizzle-orm";
-import { deleteBlogPostAction } from "@/lib/admin/blog-actions";
+import { deleteBlogPostAction, duplicateBlogPostAction } from "@/lib/admin/blog-actions";
 import Link from "next/link";
-import { Plus, Pencil } from "lucide-react";
+import { Plus, Pencil, Copy, Eye } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -61,9 +61,18 @@ export default async function AdminBlogPage() {
                     <td className="px-4 py-3 hidden md:table-cell text-moselle-text-light">{p.author}</td>
                     <td className="px-4 py-3 hidden sm:table-cell text-moselle-text-light">{p.publishedAt}</td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-3">
+                      <div className="flex items-center justify-end gap-2">
+                        <Link href={`/admin/preview/blog/${p.slug}`} className="flex items-center gap-1 text-moselle-blue hover:underline" title="Prévisualiser">
+                          <Eye size={14} />
+                        </Link>
+                        <form action={duplicateBlogPostAction}>
+                          <input type="hidden" name="id" value={p.id} />
+                          <button type="submit" className="flex items-center gap-1 text-moselle-brown hover:underline" title="Dupliquer">
+                            <Copy size={14} />
+                          </button>
+                        </form>
                         <Link href={`/admin/blog/${p.id}/edit`} className="flex items-center gap-1 text-moselle-green hover:underline">
-                          <Pencil size={14} /> Modifier
+                          <Pencil size={14} />
                         </Link>
                         <DeleteButton action={deleteBlogPostAction} id={p.id} />
                       </div>

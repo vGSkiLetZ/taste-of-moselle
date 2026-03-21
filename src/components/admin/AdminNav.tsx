@@ -3,14 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logoutAction } from "@/lib/admin/actions";
-import { LayoutDashboard, MapPin, FileText, MessageSquare, BarChart3, ExternalLink, LogOut } from "lucide-react";
+import { LayoutDashboard, MapPin, FileText, MessageSquare, BarChart3, MessageCircle, History, Upload, ExternalLink, LogOut } from "lucide-react";
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/adresses", label: "Adresses", icon: MapPin },
   { href: "/admin/blog", label: "Blog", icon: FileText },
   { href: "/admin/avis", label: "Avis", icon: MessageSquare },
+  { href: "/admin/commentaires", label: "Commentaires", icon: MessageCircle },
   { href: "/admin/analytics", label: "Stats", icon: BarChart3 },
+  { href: "/admin/logs", label: "Logs", icon: History },
+  { href: "/admin/import", label: "Import", icon: Upload },
 ];
 
 export default function AdminNav() {

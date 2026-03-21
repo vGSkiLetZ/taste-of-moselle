@@ -5,6 +5,9 @@ import { BLOG_PILLARS } from "@/lib/constants";
 import { slugify } from "@/lib/utils";
 import type { BlogPost } from "@/lib/types";
 import ImageUpload from "./ImageUpload";
+import dynamic from "next/dynamic";
+
+const TiptapEditor = dynamic(() => import("./TiptapEditor"), { ssr: false });
 
 const inputClass =
   "w-full border-2 border-moselle-cream-dark bg-moselle-white rounded-xl px-4 py-2.5 focus:border-moselle-green focus:ring-2 focus:ring-moselle-green/20 outline-none transition-colors text-moselle-text";
@@ -98,19 +101,13 @@ export default function BlogPostForm({ action, post }: BlogPostFormProps) {
         />
       </div>
 
-      {/* Contenu */}
+      {/* Contenu — Tiptap WYSIWYG */}
       <div>
-        <label className={labelClass}>Contenu (Markdown) *</label>
-        <textarea
+        <label className={labelClass}>Contenu *</label>
+        <TiptapEditor
           name="content"
-          rows={15}
-          defaultValue={post?.content || ""}
-          className={inputClass + " font-mono text-sm"}
-          placeholder={"## Sous-titre\n\nVotre texte ici...\n\n### Un autre sous-titre\n\nEcrivez en **gras** ou en *italique*."}
+          value={post?.content || ""}
         />
-        <p className="text-xs text-moselle-text-light mt-1">
-          Utilisez la syntaxe Markdown : ## pour les titres, **gras**, *italique*, [lien](url)
-        </p>
       </div>
 
       {/* Image de couverture */}

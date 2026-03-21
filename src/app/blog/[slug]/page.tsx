@@ -12,6 +12,7 @@ import Card from "@/components/ui/Card";
 import ShareButton from "@/components/ui/ShareButton";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import ViewTracker from "@/components/analytics/ViewTracker";
+import CommentSection from "@/components/blog/CommentSection";
 
 export async function generateStaticParams() {
   const posts = await getAllBlogPosts();
@@ -195,6 +196,14 @@ export default async function BlogPostPage({
             </div>
           </div>
         )}
+
+        {/* Comments */}
+        <div className="mt-12 pt-8 border-t border-moselle-cream-dark">
+          <h2 className="font-[family-name:var(--font-heading)] font-semibold text-xl text-moselle-text mb-6 section-heading">
+            Commentaires
+          </h2>
+          <CommentSection postId={post.id} />
+        </div>
       </article>
     </>
   );

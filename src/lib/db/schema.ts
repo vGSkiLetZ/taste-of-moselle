@@ -78,6 +78,26 @@ export const reviews = sqliteTable("reviews", {
   createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
 });
 
+export const blogComments = sqliteTable("blog_comments", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  postId: text("post_id")
+    .notNull()
+    .references(() => blogPosts.id, { onDelete: "cascade" }),
+  pseudo: text("pseudo").notNull(),
+  comment: text("comment").notNull(),
+  approved: integer("approved", { mode: "boolean" }).notNull().default(false),
+  createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
+});
+
+export const adminLogs = sqliteTable("admin_logs", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  action: text("action").notNull(), // create | update | delete
+  entity: text("entity").notNull(), // adresse | blog | review | comment
+  entityId: text("entity_id").notNull(),
+  entityName: text("entity_name").notNull(),
+  createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
+});
+
 export const pageViews = sqliteTable("page_views", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   pageType: text("page_type").notNull(),

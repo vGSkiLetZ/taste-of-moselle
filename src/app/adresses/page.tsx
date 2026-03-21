@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getAllAdresses } from "@/lib/api";
 import AdresseGrid from "@/components/adresses/AdresseGrid";
+import SurprendsButton from "@/components/ui/SurprendsButton";
 
 export const metadata: Metadata = {
   title: "Les Adresses",
@@ -27,6 +28,9 @@ export default async function AdressesPage() {
           </p>
           <div className="ornament-divider mt-6">
             <span className="text-moselle-brown/40">❦</span>
+          </div>
+          <div className="mt-6">
+            <SurprendsButton slugs={adresses.map((a) => a.slug)} />
           </div>
         </div>
       </section>
