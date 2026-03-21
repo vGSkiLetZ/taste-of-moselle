@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { MapPin, Search } from "lucide-react";
@@ -18,20 +17,22 @@ export default function HeroSection() {
 
   return (
     <section ref={ref} className="relative overflow-hidden bg-moselle-cream min-h-[85vh] md:min-h-[90vh] flex items-center">
-      {/* Background illustration with parallax */}
+      {/* Background video with parallax */}
       <motion.div
         style={{ y }}
         className="absolute inset-0 z-0"
       >
-        <Image
-          src="/images/hero/Gemini_Generated_Image_efy9o5efy9o5efy9 (1).png"
-          alt="Illustration vintage de la vallée de la Moselle avec vignobles et villages"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-        {/* Richer gradient overlay with warm tones */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/images/hero/hero-video.mp4" type="video/mp4" />
+        </video>
+        {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-moselle-brown-dark/20 to-moselle-cream" />
       </motion.div>
 
