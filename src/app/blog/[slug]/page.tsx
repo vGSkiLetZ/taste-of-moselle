@@ -11,6 +11,7 @@ import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import ShareButton from "@/components/ui/ShareButton";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import ViewTracker from "@/components/analytics/ViewTracker";
 
 export async function generateStaticParams() {
   const posts = await getAllBlogPosts();
@@ -58,6 +59,7 @@ export default async function BlogPostPage({
 
   return (
     <>
+      <ViewTracker pageType="blog" pageSlug={post.slug} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}

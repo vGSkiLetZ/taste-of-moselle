@@ -4,6 +4,7 @@ import { useActionState, useState, useEffect } from "react";
 import { CATEGORIES, GEO_ZONES, BUDGET_LABELS } from "@/lib/constants";
 import { slugify } from "@/lib/utils";
 import type { Adresse } from "@/lib/types";
+import ImageUpload from "./ImageUpload";
 
 const inputClass =
   "w-full border-2 border-moselle-cream-dark bg-moselle-white rounded-xl px-4 py-2.5 focus:border-moselle-green focus:ring-2 focus:ring-moselle-green/20 outline-none transition-colors text-moselle-text";
@@ -155,34 +156,24 @@ export default function AdresseForm({ action, adresse }: AdresseFormProps) {
       </div>
 
       {/* Image de couverture */}
-      <div>
-        <label className={labelClass}>Image de couverture (URL)</label>
-        <input
-          type="text"
-          name="coverUrl"
-          value={coverUrl}
-          onChange={(e) => setCoverUrl(e.target.value)}
-          className={inputClass}
-          placeholder="https://example.com/image.jpg"
-        />
-        {coverUrl && (
-          <div className="mt-2 rounded-xl overflow-hidden border-2 border-moselle-cream-dark max-w-xs">
-            <img src={coverUrl} alt="Preview" className="w-full h-40 object-cover" onError={(e) => (e.currentTarget.style.display = "none")} />
-          </div>
-        )}
-        <div className="grid grid-cols-3 gap-2 mt-2">
-          <div>
-            <span className="text-xs text-moselle-text-light">Alt</span>
-            <input type="text" name="coverAlt" defaultValue={adresse?.coverImage?.alt || ""} className={inputClass} />
-          </div>
-          <div>
-            <span className="text-xs text-moselle-text-light">Largeur</span>
-            <input type="number" name="coverWidth" defaultValue={adresse?.coverImage?.width || 800} className={inputClass} />
-          </div>
-          <div>
-            <span className="text-xs text-moselle-text-light">Hauteur</span>
-            <input type="number" name="coverHeight" defaultValue={adresse?.coverImage?.height || 600} className={inputClass} />
-          </div>
+      <ImageUpload
+        name="coverUrl"
+        value={coverUrl}
+        onChange={setCoverUrl}
+        label="Image de couverture"
+      />
+      <div className="grid grid-cols-3 gap-2">
+        <div>
+          <span className="text-xs text-moselle-text-light">Alt</span>
+          <input type="text" name="coverAlt" defaultValue={adresse?.coverImage?.alt || ""} className={inputClass} />
+        </div>
+        <div>
+          <span className="text-xs text-moselle-text-light">Largeur</span>
+          <input type="number" name="coverWidth" defaultValue={adresse?.coverImage?.width || 800} className={inputClass} />
+        </div>
+        <div>
+          <span className="text-xs text-moselle-text-light">Hauteur</span>
+          <input type="number" name="coverHeight" defaultValue={adresse?.coverImage?.height || 600} className={inputClass} />
         </div>
       </div>
 

@@ -12,6 +12,9 @@ import CategoryIcon from "@/components/ui/CategoryIcon";
 import WishlistButton from "@/components/engagement/WishlistButton";
 import ShareButton from "@/components/ui/ShareButton";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import ImageGallery from "@/components/ui/ImageGallery";
+import ReviewSection from "@/components/adresses/ReviewSection";
+import ViewTracker from "@/components/analytics/ViewTracker";
 
 export async function generateStaticParams() {
   const adresses = await getAllAdresses();
@@ -55,6 +58,7 @@ export default async function AdresseDetailPage({
 
   return (
     <>
+      <ViewTracker pageType="adresse" pageSlug={adresse.slug} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(restaurantSchema) }}
@@ -154,6 +158,19 @@ export default async function AdresseDetailPage({
               <p className="font-[family-name:var(--font-body)] text-moselle-text leading-relaxed whitespace-pre-line">
                 {adresse.description}
               </p>
+            </div>
+
+            {/* Gallery */}
+            {adresse.gallery && adresse.gallery.length > 0 && (
+              <ImageGallery images={adresse.gallery} />
+            )}
+
+            {/* Reviews */}
+            <div>
+              <h2 className="font-[family-name:var(--font-heading)] font-semibold text-xl text-moselle-text mb-4 section-heading">
+                Avis des visiteurs
+              </h2>
+              <ReviewSection adresseId={adresse.id} />
             </div>
           </div>
 

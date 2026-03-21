@@ -259,3 +259,21 @@ h2 {
 .safe-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+/* Badge micro-bounce on hover */
+@keyframes bounce-sm {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+.badge-bounce:hover {
+  animation: bounce-sm 0.3s ease-in-out;
+}
+
+/* Slide-in from bottom for compare bar */
+@keyframes slide-in-bottom {
+  from { transform: translate(-50%, 100%); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+.animate-in.slide-in-from-bottom-4 {
+  animation: slide-in-bottom 0.3s ease-out;
+}

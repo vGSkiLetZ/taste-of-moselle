@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Crimson_Pro, Satisfy } from "next/font/google";
 import LayoutShell from "@/components/layout/LayoutShell";
+import ServiceWorkerRegistration from "@/components/ui/ServiceWorkerRegistration";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -55,10 +56,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#2D5016" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+      </head>
       <body
         className={`${cormorant.variable} ${crimson.variable} ${satisfy.variable} antialiased`}
       >
         <LayoutShell>{children}</LayoutShell>
+        <ServiceWorkerRegistration />
       </body>
     </html>
   );

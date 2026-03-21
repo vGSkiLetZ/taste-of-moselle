@@ -64,3 +64,22 @@ export const blogPosts = sqliteTable("blog_posts", {
   createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
   updatedAt: text("updated_at").notNull().default(sql`(current_timestamp)`),
 });
+
+export const reviews = sqliteTable("reviews", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  adresseId: text("adresse_id")
+    .notNull()
+    .references(() => adresses.id, { onDelete: "cascade" }),
+  pseudo: text("pseudo").notNull(),
+  rating: integer("rating").notNull(),
+  comment: text("comment").notNull().default(""),
+  approved: integer("approved", { mode: "boolean" }).notNull().default(false),
+  createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
+});
+
+export const pageViews = sqliteTable("page_views", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  pageType: text("page_type").notNull(),
+  pageSlug: text("page_slug").notNull(),
+  viewedAt: text("viewed_at").notNull().default(sql`(current_timestamp)`),
+});
