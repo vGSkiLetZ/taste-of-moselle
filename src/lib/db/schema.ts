@@ -98,6 +98,14 @@ export const adminLogs = sqliteTable("admin_logs", {
   createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
 });
 
+export const adminUsers = sqliteTable("admin_users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  username: text("username").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  role: text("role").notNull().default("editor"), // admin | editor
+  createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
+});
+
 export const pageViews = sqliteTable("page_views", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   pageType: text("page_type").notNull(),

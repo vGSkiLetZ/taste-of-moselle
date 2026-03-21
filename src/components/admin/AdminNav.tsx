@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logoutAction } from "@/lib/admin/actions";
-import { LayoutDashboard, MapPin, FileText, MessageSquare, BarChart3, MessageCircle, History, Upload, ExternalLink, LogOut } from "lucide-react";
+import { LayoutDashboard, MapPin, FileText, MessageSquare, BarChart3, MessageCircle, History, Upload, Users, ExternalLink, LogOut } from "lucide-react";
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -14,6 +14,7 @@ const links = [
   { href: "/admin/analytics", label: "Stats", icon: BarChart3 },
   { href: "/admin/logs", label: "Logs", icon: History },
   { href: "/admin/import", label: "Import", icon: Upload },
+  { href: "/admin/utilisateurs", label: "Équipe", icon: Users },
 ];
 
 export default function AdminNav() {

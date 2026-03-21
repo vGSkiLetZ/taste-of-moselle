@@ -6,6 +6,7 @@ import {
   TileLayer,
   Marker,
   Popup,
+  Circle,
   useMap,
 } from "react-leaflet";
 import L from "leaflet";
@@ -18,6 +19,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import TastyScore from "@/components/ui/TastyScore";
 import CategoryIcon from "@/components/ui/CategoryIcon";
+import { Layers, MapPin as MapPinIcon } from "lucide-react";
 
 interface TastyMapProps {
   adresses: Adresse[];
@@ -66,11 +68,51 @@ function FlyToHighlight({ adresses, highlightSlug }: { adresses: Adresse[]; high
   return null;
 }
 
+function MapControls({ satellite, onToggleSatellite, radius, onRadiusChange, userPos }: {
+  satellite: boolean;
+  onToggleSatellite: () => void;
+  radius: number;
+  onRadiusChange: (r: number) => void;
+  userPos: { lat: number; lng: number } | null;
+}) {
+  return (
+    <div className="absolute top-3 right-3 z-[1000] flex flex-col gap-2">
+      <button
+        onClick={onToggleSatellite}
+        className="w-10 h-10 bg-white rounded-xl shadow-lg flex items-center justify-center hover:bg-moselle-cream transition-colors"
+        title={satellite ? "Vue carte" : "Vue satellite"}
+      >
+        <Layers size={18} className="text-moselle-text" />
+      </button>
+      {userPos && (
+        <select
+          value={radius}
+          onChange={(e) => onRadiusChange(Number(e.target.value))}
+          className="bg-white rounded-xl shadow-lg px-2 py-2 text-xs text-moselle-text border-0 outline-none cursor-pointer"
+        >
+          <option value={0}>Rayon: off</option>
+          <option value={2000}>2 km</option>
+          <option value={5000}>5 km</option>
+          <option value={10000}>10 km</option>
+          <option value={20000}>20 km</option>
+        </select>
+      )}
+    </div>
+  );
+}
+
 export default function TastyMap({ adresses, highlightSlug, className }: TastyMapProps) {
   const [mounted, setMounted] = useState(false);
+  const [satellite, setSatellite] = useState(false);
+  const [radius, setRadius] = useState(0);
+  const [userPos, setUserPos] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    navigator.geolocation?.getCurrentPosition(
+      (pos) => setUserPos({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => {}
+    );
   }, []);
 
   if (!mounted) {
@@ -79,18 +121,44 @@ export default function TastyMap({ adresses, highlightSlug, className }: TastyMa
     );
   }
 
+  const tileUrl = satellite
+    ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+    : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+
+  const tileAttrib = satellite
+    ? '&copy; Esri'
+    : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
   return (
-    <MapContainer
-      center={[MAP_CENTER.lat, MAP_CENTER.lng]}
-      zoom={MAP_DEFAULT_ZOOM}
-      className={cn("w-full h-full rounded-xl z-0", className)}
-      scrollWheelZoom
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    <div className="relative">
+      <MapControls
+        satellite={satellite}
+        onToggleSatellite={() => setSatellite(!satellite)}
+        radius={radius}
+        onRadiusChange={setRadius}
+        userPos={userPos}
       />
-      <FlyToHighlight adresses={adresses} highlightSlug={highlightSlug} />
+      <MapContainer
+        center={[MAP_CENTER.lat, MAP_CENTER.lng]}
+        zoom={MAP_DEFAULT_ZOOM}
+        className={cn("w-full h-full rounded-xl z-0", className)}
+        scrollWheelZoom
+      >
+        <TileLayer
+          attribution={tileAttrib}
+          url={tileUrl}
+          key={satellite ? "sat" : "osm"}
+        />
+        <FlyToHighlight adresses={adresses} highlightSlug={highlightSlug} />
+
+        {/* Radius circle */}
+        {userPos && radius > 0 && (
+          <Circle
+            center={[userPos.lat, userPos.lng]}
+            radius={radius}
+            pathOptions={{ color: "#4A7C59", fillColor: "#4A7C59", fillOpacity: 0.08, weight: 2 }}
+          />
+        )}
 
       {adresses.map((adresse) => (
         <Marker
@@ -122,6 +190,7 @@ export default function TastyMap({ adresses, highlightSlug, className }: TastyMa
           </Popup>
         </Marker>
       ))}
-    </MapContainer>
+      </MapContainer>
+    </div>
   );
 }

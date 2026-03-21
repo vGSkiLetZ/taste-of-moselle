@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect } from "react";
+import { useActionState, useState, useEffect, useRef, useCallback } from "react";
 import { BLOG_PILLARS } from "@/lib/constants";
 import { slugify } from "@/lib/utils";
 import type { BlogPost } from "@/lib/types";
@@ -24,13 +24,43 @@ export default function BlogPostForm({ action, post }: BlogPostFormProps) {
   const [slug, setSlug] = useState(post?.slug || "");
   const [coverUrl, setCoverUrl] = useState(post?.coverImage?.url || "");
   const [statusValue, setStatusValue] = useState(post?.status || "draft");
+  const [lastSaved, setLastSaved] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (!post) setSlug(slugify(title));
   }, [title, post]);
 
+  // Auto-save draft every 30 seconds
+  useEffect(() => {
+    if (!formRef.current) return;
+    const storageKey = `blog-draft-${post?.id || "new"}`;
+
+    // Restore draft
+    const saved = localStorage.getItem(storageKey);
+    if (saved && !post) {
+      try {
+        const data = JSON.parse(saved);
+        if (data.title) setTitle(data.title);
+        if (data.slug) setSlug(data.slug);
+        setLastSaved("Brouillon restauré");
+      } catch {}
+    }
+
+    const interval = setInterval(() => {
+      if (!formRef.current) return;
+      const formData = new FormData(formRef.current);
+      const draft: Record<string, string> = {};
+      formData.forEach((v, k) => { draft[k] = v as string; });
+      localStorage.setItem(storageKey, JSON.stringify(draft));
+      setLastSaved(`Sauvegardé à ${new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}`);
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [post]);
+
   return (
-    <form action={formAction} className="space-y-6 max-w-3xl">
+    <form ref={formRef} action={formAction} className="space-y-6 max-w-3xl">
       {state?.error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
           {state.error}
@@ -203,13 +233,18 @@ export default function BlogPostForm({ action, post }: BlogPostFormProps) {
         </div>
       </div>
 
-      <button
-        type="submit"
-        disabled={isPending}
-        className="bg-moselle-green text-white px-6 py-3 rounded-xl font-semibold hover:bg-moselle-green/90 transition-colors disabled:opacity-50"
-      >
-        {isPending ? "Enregistrement..." : post ? "Mettre a jour" : "Creer l'article"}
-      </button>
+      <div className="flex items-center gap-4">
+        <button
+          type="submit"
+          disabled={isPending}
+          className="bg-moselle-green text-white px-6 py-3 rounded-xl font-semibold hover:bg-moselle-green/90 transition-colors disabled:opacity-50"
+        >
+          {isPending ? "Enregistrement..." : post ? "Mettre a jour" : "Creer l'article"}
+        </button>
+        {lastSaved && (
+          <span className="text-xs text-moselle-text-light italic">{lastSaved}</span>
+        )}
+      </div>
     </form>
   );
 }

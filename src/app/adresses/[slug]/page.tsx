@@ -14,6 +14,7 @@ import ShareButton from "@/components/ui/ShareButton";
 import VisitedButton from "@/components/engagement/VisitedButton";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import ImageGallery from "@/components/ui/ImageGallery";
+import ParallaxHero from "@/components/ui/ParallaxHero";
 import ReviewSection from "@/components/adresses/ReviewSection";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import SwipeNavigation from "@/components/adresses/SwipeNavigation";
@@ -82,16 +83,12 @@ export default async function AdresseDetailPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
       />
 
-      {/* Hero image full-width */}
-      <div className="relative h-[40vh] sm:h-[50vh] overflow-hidden">
-        <Image
-          src={adresse.coverImage.url}
-          alt={adresse.coverImage.alt}
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover vintage-img"
-        />
+      {/* Hero image full-width with parallax */}
+      <ParallaxHero
+        src={adresse.coverImage.url}
+        alt={adresse.coverImage.alt}
+        className="h-[40vh] sm:h-[50vh]"
+      >
         <div className="absolute inset-0 bg-gradient-to-t from-moselle-text/70 via-transparent to-transparent" />
         <div className="absolute top-4 left-4">
           <Link
@@ -125,7 +122,7 @@ export default async function AdresseDetailPage({
             </h1>
           </div>
         </div>
-      </div>
+      </ParallaxHero>
 
       {/* Breadcrumbs */}
       <div className="max-w-4xl mx-auto px-4 pt-3 pb-1">
@@ -244,6 +241,15 @@ export default async function AdresseDetailPage({
                   <MapPin size={16} />
                   Voir sur la Tasty Map
                 </Link>
+                <a
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(adresse.address)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full mt-2 px-5 py-2.5 bg-moselle-brown text-white rounded-full text-sm font-semibold hover:bg-moselle-brown-dark transition-colors btn-press"
+                >
+                  <ExternalLink size={16} />
+                  Y aller (Google Maps)
+                </a>
               </div>
             </div>
           </div>
