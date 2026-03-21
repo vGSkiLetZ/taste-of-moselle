@@ -121,16 +121,9 @@ export default function TastyMap({ adresses, highlightSlug, className }: TastyMa
     );
   }
 
-  const tileUrl = satellite
-    ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-    : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-
-  const tileAttrib = satellite
-    ? '&copy; Esri'
-    : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
   return (
-    <div className="relative">
+    <div className={cn("relative w-full h-full", className)}>
       <MapControls
         satellite={satellite}
         onToggleSatellite={() => setSatellite(!satellite)}
@@ -141,14 +134,20 @@ export default function TastyMap({ adresses, highlightSlug, className }: TastyMa
       <MapContainer
         center={[MAP_CENTER.lat, MAP_CENTER.lng]}
         zoom={MAP_DEFAULT_ZOOM}
-        className={cn("w-full h-full rounded-xl z-0", className)}
+        className="w-full h-full z-0"
         scrollWheelZoom
       >
-        <TileLayer
-          attribution={tileAttrib}
-          url={tileUrl}
-          key={satellite ? "sat" : "osm"}
-        />
+        {satellite ? (
+          <TileLayer
+            attribution="&copy; Esri"
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          />
+        ) : (
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+        )}
         <FlyToHighlight adresses={adresses} highlightSlug={highlightSlug} />
 
         {/* Radius circle */}
