@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { MapPin, Search } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 export default function HeroSection() {
+  const router = useRouter();
+  const [search, setSearch] = useState("");
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -80,16 +83,44 @@ export default function HeroSection() {
           Les meilleures adresses, testées et approuvées par deux amoureux du terroir mosellan.
         </motion.p>
 
+        {/* Search bar */}
+        <motion.form
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.85 }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (search.trim()) router.push(`/adresses?q=${encodeURIComponent(search.trim())}`);
+            else router.push("/adresses");
+          }}
+          className="max-w-lg mx-auto mb-6 relative"
+        >
+          <Search size={20} className="absolute left-5 top-1/2 -translate-y-1/2 text-moselle-text-light" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Rechercher un restaurant, un plat..."
+            className="w-full pl-13 pr-28 py-4 rounded-full bg-white/95 backdrop-blur-md text-moselle-text placeholder:text-moselle-text-light/60 shadow-xl focus:outline-none focus:ring-2 focus:ring-moselle-green text-base"
+          />
+          <button
+            type="submit"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-moselle-green text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-moselle-green-light transition-colors"
+          >
+            Chercher
+          </button>
+        </motion.form>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
+          transition={{ duration: 0.8, delay: 1 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <Link href="/adresses">
             <Button size="lg">
               <Search size={20} />
-              Trouver une adresse
+              Toutes les adresses
             </Button>
           </Link>
           <Link href="/carte">

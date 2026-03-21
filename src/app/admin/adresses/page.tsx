@@ -6,7 +6,7 @@ import { adresses } from "@/lib/db/schema";
 import { desc } from "drizzle-orm";
 import { deleteAdresseAction } from "@/lib/admin/adresse-actions";
 import Link from "next/link";
-import { Plus, Pencil } from "lucide-react";
+import { Plus, Pencil, Download } from "lucide-react";
 import { BUDGET_LABELS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
@@ -24,12 +24,20 @@ export default async function AdminAdressesPage() {
           <h1 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-moselle-text">
             Adresses ({allAdresses.length})
           </h1>
-          <Link
-            href="/admin/adresses/new"
-            className="inline-flex items-center gap-1.5 bg-moselle-green text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-moselle-green/90 transition-colors"
-          >
-            <Plus size={16} /> Nouvelle adresse
-          </Link>
+          <div className="flex items-center gap-2">
+            <a
+              href="/api/export-csv"
+              className="inline-flex items-center gap-1.5 bg-moselle-brown text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-moselle-brown-dark transition-colors"
+            >
+              <Download size={16} /> Exporter CSV
+            </a>
+            <Link
+              href="/admin/adresses/new"
+              className="inline-flex items-center gap-1.5 bg-moselle-green text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-moselle-green/90 transition-colors"
+            >
+              <Plus size={16} /> Nouvelle adresse
+            </Link>
+          </div>
         </div>
 
         <div className="bg-moselle-white rounded-2xl border border-moselle-cream-dark overflow-hidden">

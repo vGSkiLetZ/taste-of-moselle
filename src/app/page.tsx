@@ -2,12 +2,16 @@ import HeroSection from "@/components/home/HeroSection";
 import AboutSection from "@/components/home/AboutSection";
 import FeaturedAdresses from "@/components/home/FeaturedAdresses";
 import LatestArticles from "@/components/home/LatestArticles";
-import { getFeaturedAdresses, getLatestBlogPosts } from "@/lib/api";
+import MiniMapSection from "@/components/home/MiniMapSection";
+import InstagramFeed from "@/components/home/InstagramFeed";
+import SuggestCTA from "@/components/home/SuggestCTA";
+import { getFeaturedAdresses, getLatestBlogPosts, getAllAdresses } from "@/lib/api";
 
 export default async function HomePage() {
-  const [featuredAdresses, latestPosts] = await Promise.all([
+  const [featuredAdresses, latestPosts, allAdresses] = await Promise.all([
     getFeaturedAdresses(4),
     getLatestBlogPosts(3),
+    getAllAdresses(),
   ]);
 
   return (
@@ -15,7 +19,10 @@ export default async function HomePage() {
       <HeroSection />
       <AboutSection />
       <FeaturedAdresses adresses={featuredAdresses} />
+      <MiniMapSection adresses={allAdresses} />
       <LatestArticles posts={latestPosts} />
+      <InstagramFeed />
+      <SuggestCTA />
     </>
   );
 }
