@@ -20,7 +20,7 @@ export default async function EditBlogPostPage({ params }: { params: Promise<{ i
   if (rows.length === 0) notFound();
 
   const row = rows[0];
-  const post: BlogPost = {
+  const post: BlogPost & { status: string } = {
     id: row.id,
     slug: row.slug,
     title: row.title,
@@ -33,6 +33,7 @@ export default async function EditBlogPostPage({ params }: { params: Promise<{ i
     readingTime: row.readingTime,
     relatedAdresses: row.relatedAdresses ? row.relatedAdresses.split(",") : [],
     tags: row.tags ? row.tags.split(",") : [],
+    status: row.status,
   };
 
   return (

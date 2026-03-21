@@ -1,7 +1,7 @@
 import type { Adresse, BlogPost, BlogPillar, ImageAsset, BudgetLevel, Category, GeoZone } from "./types";
 import { db } from "./db";
 import { adresses, adresseGallery, blogPosts } from "./db/schema";
-import { eq, desc, asc, sql } from "drizzle-orm";
+import { eq, desc, asc, sql, or, and, lte } from "drizzle-orm";
 
 // ===== Row → Interface Helpers =====
 
@@ -109,9 +109,25 @@ export async function getFeaturedAdresses(limit = 4): Promise<Adresse[]> {
 
 // ===== Blog Posts =====
 
+// Only return visible posts: published OR scheduled with date <= now
+const visiblePostCondition = or(
+  eq(blogPosts.status, "published"),
+  and(eq(blogPosts.status, "scheduled"), lte(blogPosts.publishedAt, sql`(date('now'))`))
+);
+
 export async function getAllBlogPosts(): Promise<BlogPost[]> {
-  const rows = await db.select().from(blogPosts).orderBy(desc(blogPosts.publishedAt));
+  const rows = await db
+    .select()
+    .from(blogPosts)
+    .where(visiblePostCondition)
+    .orderBy(desc(blogPosts.publishedAt));
   return rows.map(rowToBlogPost);
+}
+
+// Admin: get ALL posts regardless of status
+export async function getAllBlogPostsAdmin(): Promise<(BlogPost & { status: string })[]> {
+  const rows = await db.select().from(blogPosts).orderBy(desc(blogPosts.publishedAt));
+  return rows.map((r) => ({ ...rowToBlogPost(r), status: r.status }));
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | undefined> {
@@ -120,7 +136,11 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | undefi
 }
 
 export async function getBlogPostsByPillar(pillar: BlogPillar): Promise<BlogPost[]> {
-  const rows = await db.select().from(blogPosts).where(eq(blogPosts.pillar, pillar));
+  const rows = await db
+    .select()
+    .from(blogPosts)
+    .where(and(eq(blogPosts.pillar, pillar), visiblePostCondition))
+    .orderBy(desc(blogPosts.publishedAt));
   return rows.map(rowToBlogPost);
 }
 
@@ -128,6 +148,7 @@ export async function getLatestBlogPosts(limit = 3): Promise<BlogPost[]> {
   const rows = await db
     .select()
     .from(blogPosts)
+    .where(visiblePostCondition)
     .orderBy(desc(blogPosts.publishedAt))
     .limit(limit);
   return rows.map(rowToBlogPost);

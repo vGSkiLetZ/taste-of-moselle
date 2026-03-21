@@ -37,6 +37,7 @@ export async function createBlogPostAction(
       readingTime: getReadingTime(content),
       relatedAdresses: (formData.get("relatedAdresses") as string) || "",
       tags: (formData.get("tags") as string) || "",
+      status: (formData.get("status") as string) || "draft",
       publishedAt: (formData.get("publishedAt") as string) || new Date().toISOString().split("T")[0],
     });
   } catch (e: any) {
@@ -79,6 +80,7 @@ export async function updateBlogPostAction(
         readingTime: getReadingTime(content),
         relatedAdresses: (formData.get("relatedAdresses") as string) || "",
         tags: (formData.get("tags") as string) || "",
+        status: (formData.get("status") as string) || "draft",
         publishedAt: (formData.get("publishedAt") as string) || new Date().toISOString().split("T")[0],
         updatedAt: new Date().toISOString(),
       })

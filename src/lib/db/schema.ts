@@ -60,6 +60,7 @@ export const blogPosts = sqliteTable("blog_posts", {
   readingTime: integer("reading_time").notNull().default(5),
   relatedAdresses: text("related_adresses").notNull().default(""),
   tags: text("tags").notNull().default(""),
+  status: text("status").notNull().default("draft"), // draft | scheduled | published
   publishedAt: text("published_at").notNull(),
   createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
   updatedAt: text("updated_at").notNull().default(sql`(current_timestamp)`),

@@ -15,6 +15,7 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import ImageGallery from "@/components/ui/ImageGallery";
 import ReviewSection from "@/components/adresses/ReviewSection";
 import ViewTracker from "@/components/analytics/ViewTracker";
+import SwipeNavigation from "@/components/adresses/SwipeNavigation";
 
 export async function generateStaticParams() {
   const adresses = await getAllAdresses();
@@ -50,6 +51,12 @@ export default async function AdresseDetailPage({
   const adresse = await getAdresseBySlug(slug);
   if (!adresse) notFound();
 
+  // Get adjacent addresses for swipe navigation
+  const allAdresses = await getAllAdresses();
+  const currentIndex = allAdresses.findIndex((a) => a.slug === slug);
+  const prevAdresse = currentIndex > 0 ? allAdresses[currentIndex - 1] : null;
+  const nextAdresse = currentIndex < allAdresses.length - 1 ? allAdresses[currentIndex + 1] : null;
+
   const category = CATEGORIES.find((c) => c.value === adresse.category);
   const zone = GEO_ZONES.find((z) => z.value === adresse.geoZone);
 
@@ -59,6 +66,12 @@ export default async function AdresseDetailPage({
   return (
     <>
       <ViewTracker pageType="adresse" pageSlug={adresse.slug} />
+      <SwipeNavigation
+        prevSlug={prevAdresse?.slug ?? null}
+        nextSlug={nextAdresse?.slug ?? null}
+        prevName={prevAdresse?.name ?? null}
+        nextName={nextAdresse?.name ?? null}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(restaurantSchema) }}

@@ -12,7 +12,7 @@ const labelClass = "block text-sm font-semibold text-moselle-text mb-1";
 
 interface BlogPostFormProps {
   action: (prevState: { error?: string } | null, formData: FormData) => Promise<{ error?: string }>;
-  post?: BlogPost;
+  post?: BlogPost & { status?: string };
 }
 
 export default function BlogPostForm({ action, post }: BlogPostFormProps) {
@@ -20,6 +20,7 @@ export default function BlogPostForm({ action, post }: BlogPostFormProps) {
   const [title, setTitle] = useState(post?.title || "");
   const [slug, setSlug] = useState(post?.slug || "");
   const [coverUrl, setCoverUrl] = useState(post?.coverImage?.url || "");
+  const [statusValue, setStatusValue] = useState(post?.status || "draft");
 
   useEffect(() => {
     if (!post) setSlug(slugify(title));
@@ -158,15 +159,51 @@ export default function BlogPostForm({ action, post }: BlogPostFormProps) {
         </div>
       </div>
 
-      {/* Date */}
-      <div className="max-w-xs">
-        <label className={labelClass}>Date de publication</label>
-        <input
-          type="date"
-          name="publishedAt"
-          defaultValue={post?.publishedAt?.split("T")[0] || new Date().toISOString().split("T")[0]}
-          className={inputClass}
-        />
+      {/* Status + Date */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className={labelClass}>Statut</label>
+          <div className="flex gap-2">
+            {[
+              { value: "draft", label: "Brouillon", color: "bg-yellow-100 text-yellow-800 border-yellow-300" },
+              { value: "scheduled", label: "Planifié", color: "bg-blue-100 text-blue-800 border-blue-300" },
+              { value: "published", label: "Publié", color: "bg-green-100 text-green-800 border-green-300" },
+            ].map((s) => (
+              <label
+                key={s.value}
+                className={`flex-1 text-center py-2.5 rounded-xl text-sm font-semibold border-2 cursor-pointer transition-all ${
+                  statusValue === s.value
+                    ? s.color + " ring-2 ring-offset-1 ring-current"
+                    : "bg-moselle-cream text-moselle-text-light border-moselle-cream-dark"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="status"
+                  value={s.value}
+                  checked={statusValue === s.value}
+                  onChange={(e) => setStatusValue(e.target.value)}
+                  className="sr-only"
+                />
+                {s.label}
+              </label>
+            ))}
+          </div>
+          <p className="text-xs text-moselle-text-light mt-1">
+            {statusValue === "draft" && "Non visible sur le site"}
+            {statusValue === "scheduled" && "Sera publié automatiquement à la date choisie"}
+            {statusValue === "published" && "Visible immédiatement"}
+          </p>
+        </div>
+        <div>
+          <label className={labelClass}>Date de publication</label>
+          <input
+            type="date"
+            name="publishedAt"
+            defaultValue={post?.publishedAt?.split("T")[0] || new Date().toISOString().split("T")[0]}
+            className={inputClass}
+          />
+        </div>
       </div>
 
       <button

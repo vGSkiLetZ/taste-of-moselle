@@ -1,16 +1,19 @@
 "use client";
 
-import { Heart, ArrowRight } from "lucide-react";
+import { Heart, ArrowRight, Share2, Check } from "lucide-react";
 import Link from "next/link";
 import { useWishlist } from "@/hooks/useWishlist";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import type { Adresse } from "@/lib/types";
 import AdresseCard from "@/components/adresses/AdresseCard";
 import Button from "@/components/ui/Button";
+import { useToast } from "@/components/ui/Toast";
 
 export default function WishlistPage() {
   const { slugs, isReady } = useWishlist();
   const [adresses, setAdresses] = useState<Adresse[]>([]);
+  const { toast } = useToast();
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (isReady && slugs.length > 0) {
@@ -20,6 +23,32 @@ export default function WishlistPage() {
       });
     }
   }, [slugs, isReady]);
+
+  const handleShare = useCallback(async () => {
+    const shareUrl = `${window.location.origin}/wishlist/partage?s=${slugs.join(",")}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Ma sélection Taste of Moselle",
+          text: `Découvre mes ${slugs.length} adresses favorites en Moselle !`,
+          url: shareUrl,
+        });
+        return;
+      } catch {
+        // User cancelled, fall through to clipboard
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      toast("link-copied", "Lien copié !");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.prompt("Copiez ce lien :", shareUrl);
+    }
+  }, [slugs, toast]);
 
   if (!isReady) {
     return (
@@ -71,9 +100,19 @@ export default function WishlistPage() {
           </div>
         ) : (
           <>
-            <p className="text-sm text-moselle-text-light mb-6">
-              {slugs.length} adresse{slugs.length > 1 ? "s" : ""} sauvée{slugs.length > 1 ? "s" : ""}
-            </p>
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-sm text-moselle-text-light">
+                {slugs.length} adresse{slugs.length > 1 ? "s" : ""} sauvée
+                {slugs.length > 1 ? "s" : ""}
+              </p>
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-moselle-green text-white text-sm font-semibold hover:bg-moselle-green/90 transition-colors active:scale-95"
+              >
+                {copied ? <Check size={16} /> : <Share2 size={16} />}
+                {copied ? "Copié !" : "Partager ma sélection"}
+              </button>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {adresses.map((adresse) => (
                 <AdresseCard key={adresse.id} adresse={adresse} />

@@ -37,6 +37,7 @@ export default async function AdminBlogPage() {
               <thead>
                 <tr className="bg-moselle-cream/50 text-left">
                   <th className="px-4 py-3 font-semibold">Titre</th>
+                  <th className="px-4 py-3 font-semibold hidden sm:table-cell">Statut</th>
                   <th className="px-4 py-3 font-semibold hidden sm:table-cell">Pilier</th>
                   <th className="px-4 py-3 font-semibold hidden md:table-cell">Auteur</th>
                   <th className="px-4 py-3 font-semibold hidden sm:table-cell">Date</th>
@@ -47,6 +48,15 @@ export default async function AdminBlogPage() {
                 {allPosts.map((p) => (
                   <tr key={p.id} className="hover:bg-moselle-cream/30 transition-colors">
                     <td className="px-4 py-3 font-medium">{p.title}</td>
+                    <td className="px-4 py-3 hidden sm:table-cell">
+                      <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${
+                        p.status === "published" ? "bg-green-100 text-green-800" :
+                        p.status === "scheduled" ? "bg-blue-100 text-blue-800" :
+                        "bg-yellow-100 text-yellow-800"
+                      }`}>
+                        {p.status === "published" ? "Publié" : p.status === "scheduled" ? "Planifié" : "Brouillon"}
+                      </span>
+                    </td>
                     <td className="px-4 py-3 hidden sm:table-cell text-moselle-text-light">{p.pillar}</td>
                     <td className="px-4 py-3 hidden md:table-cell text-moselle-text-light">{p.author}</td>
                     <td className="px-4 py-3 hidden sm:table-cell text-moselle-text-light">{p.publishedAt}</td>

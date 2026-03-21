@@ -8,12 +8,13 @@ import type { Category, GeoZone, BudgetLevel } from "@/lib/types";
 import { getDistance } from "@/lib/utils";
 import AdresseCard from "./AdresseCard";
 import AdresseFilters from "./AdresseFilters";
+import BottomSheetFilters from "./BottomSheetFilters";
 import CompareBar from "./CompareBar";
 import AnimateIn from "@/components/ui/AnimateIn";
 import PullToRefresh from "@/components/ui/PullToRefresh";
 import { CardSkeletonGrid } from "@/components/ui/Skeleton";
 import { useGeolocation } from "@/hooks/useGeolocation";
-import { Navigation } from "lucide-react";
+import { Navigation, Search } from "lucide-react";
 
 interface AdresseGridProps {
   adresses: Adresse[];
@@ -60,7 +61,8 @@ function AdresseGridInner({ adresses }: AdresseGridProps) {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
       <div className="space-y-6">
-        <div className="flex items-center gap-3">
+        {/* Desktop filters */}
+        <div className="hidden md:flex items-center gap-3">
           <div className="flex-1">
             <AdresseFilters totalResults={items.length} />
           </div>
@@ -74,8 +76,48 @@ function AdresseGridInner({ adresses }: AdresseGridProps) {
             } ${loading ? "opacity-50" : ""}`}
           >
             <Navigation size={16} className={loading ? "animate-spin" : ""} />
-            {loading ? "..." : active ? "Desactiver" : "Pres de moi"}
+            {loading ? "..." : active ? "Désactiver" : "Près de moi"}
           </button>
+        </div>
+
+        {/* Mobile: search + bottom sheet + geo */}
+        <div className="md:hidden space-y-3">
+          <div className="relative">
+            <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-moselle-text-light" />
+            <input
+              type="text"
+              value={filters.search}
+              onChange={(e) => {
+                const params = new URLSearchParams(window.location.search);
+                if (e.target.value) params.set("q", e.target.value);
+                else params.delete("q");
+                window.history.replaceState(null, "", `?${params.toString()}`);
+                router.refresh();
+              }}
+              placeholder="Rechercher..."
+              className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-moselle-cream-dark bg-moselle-white text-moselle-text placeholder:text-moselle-text-light/60 focus:outline-none focus:border-moselle-green transition-colors text-base"
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <BottomSheetFilters totalResults={items.length} />
+              <button
+                onClick={active ? deactivate : requestPosition}
+                disabled={loading}
+                className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-sm font-medium transition-all ${
+                  active
+                    ? "bg-moselle-green text-white shadow-md"
+                    : "border-2 border-moselle-cream-dark text-moselle-text"
+                } ${loading ? "opacity-50" : ""}`}
+              >
+                <Navigation size={16} className={loading ? "animate-spin" : ""} />
+                {loading ? "..." : active ? "Off" : "Près de moi"}
+              </button>
+            </div>
+            <span className="text-sm text-moselle-text-light">
+              {items.length} résultat{items.length !== 1 ? "s" : ""}
+            </span>
+          </div>
         </div>
 
         {items.length === 0 ? (
