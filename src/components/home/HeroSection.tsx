@@ -35,8 +35,9 @@ export default function HeroSection() {
         >
           <source src="/images/hero/hero-video.mp4" type="video/mp4" />
         </video>
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-moselle-brown-dark/20 to-moselle-cream" />
+        {/* Animated gradient overlay */}
+        <div className="absolute inset-0 hero-gradient-animated" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-moselle-cream" />
       </motion.div>
 
       {/* Content */}

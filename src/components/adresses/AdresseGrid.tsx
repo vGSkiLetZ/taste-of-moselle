@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useMemo } from "react";
+import { Suspense, useCallback, useMemo, useEffect, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { Adresse } from "@/lib/types";
 import { applyFilters, type FilterState } from "@/hooks/useFilters";
@@ -9,6 +9,7 @@ import { getDistance } from "@/lib/utils";
 import AdresseCard from "./AdresseCard";
 import AdresseFilters from "./AdresseFilters";
 import BottomSheetFilters from "./BottomSheetFilters";
+import HoverPreview from "./HoverPreview";
 import CompareBar from "./CompareBar";
 import AnimateIn from "@/components/ui/AnimateIn";
 import PullToRefresh from "@/components/ui/PullToRefresh";
@@ -24,6 +25,14 @@ function AdresseGridInner({ adresses }: AdresseGridProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { position, loading, active, requestPosition, deactivate } = useGeolocation();
+  const stickyRef = useRef<HTMLDivElement>(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 200);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const filters: FilterState = {
     search: searchParams.get("q") ?? "",
@@ -61,8 +70,8 @@ function AdresseGridInner({ adresses }: AdresseGridProps) {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
       <div className="space-y-6">
-        {/* Desktop filters */}
-        <div className="hidden md:flex items-center gap-3">
+        {/* Desktop filters — sticky search */}
+        <div ref={stickyRef} className={`hidden md:flex items-center gap-3 sticky-search ${scrolled ? "scrolled" : ""}`}>
           <div className="flex-1">
             <AdresseFilters totalResults={items.length} />
           </div>
@@ -133,10 +142,12 @@ function AdresseGridInner({ adresses }: AdresseGridProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {items.map((adresse, i) => (
               <AnimateIn key={adresse.id} delay={i * 0.06}>
-                <AdresseCard
-                  adresse={adresse}
-                  distance={distances.get(adresse.slug) ?? null}
-                />
+                <HoverPreview adresse={adresse}>
+                  <AdresseCard
+                    adresse={adresse}
+                    distance={distances.get(adresse.slug) ?? null}
+                  />
+                </HoverPreview>
               </AnimateIn>
             ))}
           </div>

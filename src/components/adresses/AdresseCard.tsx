@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Heart, MapPin } from "lucide-react";
+import { Heart, MapPin, Star } from "lucide-react";
 import type { Adresse } from "@/lib/types";
 import { CATEGORIES } from "@/lib/constants";
 import { cn, truncate } from "@/lib/utils";
@@ -35,6 +35,7 @@ export default function AdresseCard({ adresse, distance, className }: AdresseCar
   const isSaved = isInWishlist(adresse.slug);
   const categoryLabel =
     CATEGORIES.find((c) => c.value === adresse.category)?.label ?? adresse.category;
+  const isCoupDeCoeur = adresse.tastyScore >= 9;
 
   return (
     <Card
@@ -43,6 +44,15 @@ export default function AdresseCard({ adresse, distance, className }: AdresseCar
     >
       {/* Cover image */}
       <div className="relative aspect-[4/3] overflow-hidden">
+        {/* Coup de coeur badge */}
+        {isCoupDeCoeur && (
+          <div className="absolute top-3 left-3 z-10 coup-de-coeur-badge">
+            <div className="flex items-center gap-1 bg-amber-400/90 backdrop-blur-sm text-amber-900 text-xs font-bold px-2.5 py-1 rounded-full shadow-lg">
+              <Star size={12} fill="currentColor" />
+              Coup de coeur
+            </div>
+          </div>
+        )}
         <Image
           src={adresse.coverImage.url}
           alt={adresse.coverImage.alt}

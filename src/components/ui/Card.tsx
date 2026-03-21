@@ -25,7 +25,7 @@ export default function Card({
   return (
     <div
       className={cn(
-        "paper-texture bg-moselle-cream rounded-[var(--radius-card)] overflow-hidden",
+        "glass-card rounded-[var(--radius-card)] overflow-hidden",
         "shadow-[var(--shadow-card)]",
         borderMap[borderColor],
         hover && "card-hover-lift",

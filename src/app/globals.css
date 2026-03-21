@@ -277,3 +277,55 @@ h2 {
 .animate-in.slide-in-from-bottom-4 {
   animation: slide-in-bottom 0.3s ease-out;
 }
+
+/* Animated gradient hero overlay */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.hero-gradient-animated {
+  background: linear-gradient(
+    -45deg,
+    rgba(0,0,0,0.6),
+    rgba(45,80,22,0.3),
+    rgba(107,78,47,0.3),
+    rgba(0,0,0,0.5)
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 12s ease infinite;
+}
+
+/* Glass morphism card */
+.glass-card {
+  background: rgba(255, 253, 247, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.glass-card:hover {
+  background: rgba(255, 253, 247, 0.85);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Coup de coeur golden pulse */
+@keyframes golden-pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(218, 165, 32, 0.4)); }
+  50% { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(218, 165, 32, 0.7)); }
+}
+.coup-de-coeur-badge {
+  animation: golden-pulse 2s ease-in-out infinite;
+}
+
+/* Sticky search bar */
+.sticky-search {
+  position: sticky;
+  top: 4rem;
+  z-index: 40;
+  background: var(--color-moselle-white);
+  padding-bottom: 0.75rem;
+  transition: box-shadow 0.3s ease;
+}
+.sticky-search.scrolled {
+  box-shadow: 0 4px 12px rgba(61, 46, 31, 0.08);
+}
