@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Crimson_Pro, Satisfy } from "next/font/google";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import BottomNav from "@/components/layout/BottomNav";
-import ScrollToTop from "@/components/ui/ScrollToTop";
-import CookieBanner from "@/components/ui/CookieBanner";
-import { ToastProvider } from "@/components/ui/Toast";
+import LayoutShell from "@/components/layout/LayoutShell";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -63,14 +58,7 @@ export default function RootLayout({
       <body
         className={`${cormorant.variable} ${crimson.variable} ${satisfy.variable} antialiased`}
       >
-        <ToastProvider>
-          <Header />
-          <main className="min-h-[calc(100vh-4rem)] pb-16 md:pb-0">{children}</main>
-          <Footer />
-          <BottomNav />
-          <ScrollToTop />
-          <CookieBanner />
-        </ToastProvider>
+        <LayoutShell>{children}</LayoutShell>
       </body>
     </html>
   );

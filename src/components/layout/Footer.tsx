@@ -55,30 +55,15 @@ export default function Footer() {
             </nav>
           </div>
 
-          {/* Newsletter teaser + social */}
+          {/* Social */}
           <div>
             <h4 className="font-[family-name:var(--font-heading)] font-bold text-lg mb-4 uppercase tracking-widest text-white/90">
-              Newsletter
+              Suivez-nous
             </h4>
             <p className="text-sm text-white/80 mb-4">
-              Notre newsletter mensuelle avec les meilleures découvertes.
+              Retrouvez nos decouvertes gourmandes sur les reseaux.
             </p>
-            <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
-              <input
-                type="email"
-                placeholder="votre@email.fr"
-                className="flex-1 px-4 py-2.5 rounded-full bg-white/15 border border-white/30 text-white placeholder:text-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-white/40"
-              />
-              <button
-                type="submit"
-                className="px-5 py-2.5 bg-moselle-brown text-white rounded-full text-sm font-semibold hover:bg-moselle-brown-dark transition-colors"
-              >
-                OK
-              </button>
-            </form>
-
-            {/* Social */}
-            <div className="flex gap-4 mt-6">
+            <div className="flex gap-4">
               <a
                 href="https://instagram.com"
                 target="_blank"

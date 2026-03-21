@@ -2,7 +2,6 @@ import HeroSection from "@/components/home/HeroSection";
 import AboutSection from "@/components/home/AboutSection";
 import FeaturedAdresses from "@/components/home/FeaturedAdresses";
 import LatestArticles from "@/components/home/LatestArticles";
-import NewsletterCTA from "@/components/home/NewsletterCTA";
 import { getFeaturedAdresses, getLatestBlogPosts } from "@/lib/api";
 
 export default async function HomePage() {
@@ -17,7 +16,6 @@ export default async function HomePage() {
       <AboutSection />
       <FeaturedAdresses adresses={featuredAdresses} />
       <LatestArticles posts={latestPosts} />
-      <NewsletterCTA />
     </>
   );
 }
