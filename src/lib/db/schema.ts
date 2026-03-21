@@ -106,6 +106,11 @@ export const adminUsers = sqliteTable("admin_users", {
   createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
 });
 
+export const siteSettings = sqliteTable("site_settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull().default(""),
+});
+
 export const pageViews = sqliteTable("page_views", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   pageType: text("page_type").notNull(),

@@ -18,6 +18,7 @@ import ParallaxHero from "@/components/ui/ParallaxHero";
 import ReviewSection from "@/components/adresses/ReviewSection";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import SwipeNavigation from "@/components/adresses/SwipeNavigation";
+import GoogleRating from "@/components/adresses/GoogleRating";
 
 export async function generateStaticParams() {
   const adresses = await getAllAdresses();
@@ -39,7 +40,12 @@ export async function generateMetadata({
     openGraph: {
       title: `${adresse.name} | Taste of Moselle`,
       description: adresse.petitPlus,
-      images: [adresse.coverImage.url],
+      images: [{
+        url: `/api/og?name=${encodeURIComponent(adresse.name)}&score=${adresse.tastyScore.toFixed(1)}&category=${encodeURIComponent(adresse.category)}&image=${encodeURIComponent(adresse.coverImage.url)}`,
+        width: 1200,
+        height: 630,
+        alt: adresse.name,
+      }],
     },
   };
 }
@@ -250,6 +256,12 @@ export default async function AdresseDetailPage({
                   <ExternalLink size={16} />
                   Y aller (Google Maps)
                 </a>
+
+                {adresse.googleMapsId && (
+                  <div className="mt-3">
+                    <GoogleRating googleMapsId={adresse.googleMapsId} />
+                  </div>
+                )}
               </div>
             </div>
           </div>

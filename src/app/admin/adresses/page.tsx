@@ -2,11 +2,11 @@ import { requireAuth } from "@/lib/admin/auth";
 import AdminNav from "@/components/admin/AdminNav";
 import DeleteButton from "@/components/admin/DeleteButton";
 import { db } from "@/lib/db";
-import { adresses } from "@/lib/db/schema";
-import { desc } from "drizzle-orm";
+import { adresses, pageViews } from "@/lib/db/schema";
+import { desc, eq, sql } from "drizzle-orm";
 import { deleteAdresseAction } from "@/lib/admin/adresse-actions";
 import Link from "next/link";
-import { Plus, Pencil, Download } from "lucide-react";
+import { Plus, Pencil, Download, Eye } from "lucide-react";
 import { BUDGET_LABELS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +15,17 @@ export default async function AdminAdressesPage() {
   await requireAuth();
 
   const allAdresses = await db.select().from(adresses).orderBy(desc(adresses.updatedAt));
+
+  // Get view counts per adresse
+  const viewCounts = await db
+    .select({
+      slug: pageViews.pageSlug,
+      views: sql<number>`count(*)`.as("views"),
+    })
+    .from(pageViews)
+    .where(eq(pageViews.pageType, "adresse"))
+    .groupBy(pageViews.pageSlug);
+  const viewMap = new Map(viewCounts.map((v) => [v.slug, v.views]));
 
   return (
     <>
@@ -50,6 +61,7 @@ export default async function AdminAdressesPage() {
                   <th className="px-4 py-3 font-semibold hidden md:table-cell">Zone</th>
                   <th className="px-4 py-3 font-semibold hidden sm:table-cell">Budget</th>
                   <th className="px-4 py-3 font-semibold hidden sm:table-cell">Score</th>
+                  <th className="px-4 py-3 font-semibold hidden md:table-cell">Vues</th>
                   <th className="px-4 py-3 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
@@ -61,6 +73,12 @@ export default async function AdminAdressesPage() {
                     <td className="px-4 py-3 hidden md:table-cell text-moselle-text-light">{a.geoZone}</td>
                     <td className="px-4 py-3 hidden sm:table-cell">{BUDGET_LABELS[a.budget]}</td>
                     <td className="px-4 py-3 hidden sm:table-cell font-semibold text-moselle-green">{a.tastyScore}</td>
+                    <td className="px-4 py-3 hidden md:table-cell">
+                      <span className="inline-flex items-center gap-1 text-xs text-moselle-text-light">
+                        <Eye size={12} />
+                        {viewMap.get(a.slug) || 0}
+                      </span>
+                    </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-3">
                         <Link href={`/admin/adresses/${a.id}/edit`} className="flex items-center gap-1 text-moselle-green hover:underline">
