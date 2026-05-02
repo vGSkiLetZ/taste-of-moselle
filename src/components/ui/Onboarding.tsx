@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Heart, Star, ChevronRight } from "lucide-react";
 
@@ -35,6 +34,7 @@ export default function Onboarding() {
 
   useEffect(() => {
     const seen = localStorage.getItem("onboarding-done");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!seen) setShow(true);
   }, []);
 

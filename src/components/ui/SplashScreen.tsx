@@ -11,6 +11,7 @@ export default function SplashScreen() {
     // Only show on first visit per session
     const shown = sessionStorage.getItem("splash-shown");
     if (!shown) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShow(true);
       sessionStorage.setItem("splash-shown", "1");
       setTimeout(() => setShow(false), 2200);

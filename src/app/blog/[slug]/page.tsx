@@ -7,6 +7,7 @@ import { getAllBlogPosts, getBlogPostBySlug, getAdresseBySlug } from "@/lib/api"
 import { BLOG_PILLARS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 import { generateArticleSchema } from "@/lib/seo";
+import { sanitizeHtml } from "@/lib/sanitize";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import ShareButton from "@/components/ui/ShareButton";
@@ -78,11 +79,12 @@ export default async function BlogPostPage({
           sizes="100vw"
           className="object-cover vintage-img"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-moselle-text/70 via-transparent to-transparent" />
+        {/* Stronger overlay so the title stays readable on bright photos */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/30" />
         <div className="absolute top-4 left-4">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-1.5 text-sm text-white/90 hover:text-white transition-colors bg-black/20 backdrop-blur-sm rounded-full px-3 py-1.5"
+            className="inline-flex items-center gap-1.5 text-sm text-white/90 hover:text-white transition-colors bg-black/40 backdrop-blur-sm rounded-full px-3 py-1.5"
           >
             <ArrowLeft size={16} />
             Blog
@@ -96,7 +98,14 @@ export default async function BlogPostPage({
             <Badge variant="cream" className="mb-3">
               {pillar?.label}
             </Badge>
-            <h1 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight [text-shadow:_0_2px_12px_rgba(0,0,0,0.4)]">
+            <h1
+              className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight"
+              style={{
+                color: "#ffffff",
+                textShadow:
+                  "0 3px 16px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.9)",
+              }}
+            >
               {post.title}
             </h1>
           </div>
@@ -134,38 +143,10 @@ export default async function BlogPostPage({
         </div>
 
         {/* Content */}
-        <div className="prose prose-lg max-w-none mb-10">
-          {post.content.split("\n\n").map((para, i) => {
-            if (para.startsWith("## ")) {
-              return (
-                <h2
-                  key={i}
-                  className="font-[family-name:var(--font-heading)] text-2xl font-bold text-moselle-text mt-10 mb-4 section-heading"
-                >
-                  {para.replace("## ", "")}
-                </h2>
-              );
-            }
-            if (para.startsWith("### ")) {
-              return (
-                <h3
-                  key={i}
-                  className="font-[family-name:var(--font-heading)] text-xl font-semibold text-moselle-text mt-6 mb-3"
-                >
-                  {para.replace("### ", "")}
-                </h3>
-              );
-            }
-            return (
-              <p
-                key={i}
-                className={`font-[family-name:var(--font-body)] text-moselle-text leading-relaxed mb-4 ${i === 0 ? "drop-cap" : ""}`}
-              >
-                {para}
-              </p>
-            );
-          })}
-        </div>
+        <div
+          className="prose prose-lg max-w-none mb-10 blog-content font-[family-name:var(--font-body)] text-moselle-text"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
+        />
 
         {/* Related addresses */}
         {relatedAdresses.filter(Boolean).length > 0 && (

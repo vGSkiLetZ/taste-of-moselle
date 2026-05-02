@@ -10,12 +10,6 @@ const paths: Record<DividerType, string> = {
   wave: "M0,30 C100,10 200,40 300,20 S500,40 600,20",
 };
 
-const decorations: Record<DividerType, { emoji: string; positions: number[] }> = {
-  vine: { emoji: "🍇", positions: [150, 450] },
-  utensils: { emoji: "🍴", positions: [300] },
-  wave: { emoji: "🍷", positions: [200, 400] },
-};
-
 interface AnimatedDividerProps {
   type?: DividerType;
   className?: string;
@@ -23,7 +17,6 @@ interface AnimatedDividerProps {
 
 export default function AnimatedDivider({ type = "vine", className = "" }: AnimatedDividerProps) {
   const path = paths[type];
-  const deco = decorations[type];
 
   return (
     <div className={`flex items-center justify-center py-4 ${className}`}>

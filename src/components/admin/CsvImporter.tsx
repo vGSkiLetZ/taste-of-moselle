@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Upload, CheckCircle, AlertCircle, FileSpreadsheet } from "lucide-react";
+import { CheckCircle, AlertCircle, FileSpreadsheet } from "lucide-react";
 
 interface ImportResult {
   success: number;

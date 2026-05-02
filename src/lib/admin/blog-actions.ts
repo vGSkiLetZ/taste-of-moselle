@@ -6,7 +6,8 @@ import { db } from "@/lib/db";
 import { blogPosts } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { requireAuth } from "./auth";
-import { slugify, getReadingTime } from "@/lib/utils";
+import { getReadingTime } from "@/lib/utils";
+import { ensureUniqueSlug } from "./slug";
 import { logAction } from "./log";
 
 export async function createBlogPostAction(
@@ -20,7 +21,8 @@ export async function createBlogPostAction(
 
   const content = (formData.get("content") as string) || "";
   const id = crypto.randomUUID().slice(0, 8);
-  const slug = (formData.get("slug") as string) || slugify(title);
+  const desiredSlug = (formData.get("slug") as string) || title;
+  const slug = await ensureUniqueSlug("blogPosts", desiredSlug, { fallbackSource: title });
 
   try {
     await db.insert(blogPosts).values({
@@ -42,12 +44,14 @@ export async function createBlogPostAction(
       publishedAt: (formData.get("publishedAt") as string) || new Date().toISOString().split("T")[0],
     });
     await logAction("create", "blog", id, title);
-  } catch (e: any) {
-    return { error: e.message || "Erreur lors de la creation" };
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "Erreur lors de la creation";
+    return { error: message };
   }
 
   revalidatePath("/");
   revalidatePath("/blog");
+  revalidatePath(`/blog/${slug}`);
   redirect("/admin/blog");
 }
 
@@ -64,12 +68,17 @@ export async function updateBlogPostAction(
   if (!title) return { error: "Le titre est requis" };
 
   const content = (formData.get("content") as string) || "";
+  const desiredSlug = (formData.get("slug") as string) || title;
+  const slug = await ensureUniqueSlug("blogPosts", desiredSlug, {
+    fallbackSource: title,
+    excludeId: id,
+  });
 
   try {
     await db
       .update(blogPosts)
       .set({
-        slug: (formData.get("slug") as string) || slugify(title),
+        slug,
         title,
         pillar: (formData.get("pillar") as string) || "dossier-thematique",
         excerpt: (formData.get("excerpt") as string) || "",
@@ -87,12 +96,15 @@ export async function updateBlogPostAction(
         updatedAt: new Date().toISOString(),
       })
       .where(eq(blogPosts.id, id));
-  } catch (e: any) {
-    return { error: e.message || "Erreur lors de la mise a jour" };
+    await logAction("update", "blog", id, title);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "Erreur lors de la mise a jour";
+    return { error: message };
   }
 
   revalidatePath("/");
   revalidatePath("/blog");
+  revalidatePath(`/blog/${slug}`);
   redirect("/admin/blog");
 }
 
@@ -106,11 +118,14 @@ export async function duplicateBlogPostAction(formData: FormData): Promise<void>
 
   const original = rows[0];
   const newId = crypto.randomUUID().slice(0, 8);
+  const newSlug = await ensureUniqueSlug("blogPosts", `${original.slug}-copie`, {
+    fallbackSource: original.title,
+  });
 
   await db.insert(blogPosts).values({
     ...original,
     id: newId,
-    slug: `${original.slug}-copie`,
+    slug: newSlug,
     title: `${original.title} (copie)`,
     status: "draft",
     createdAt: new Date().toISOString(),
@@ -125,7 +140,16 @@ export async function deleteBlogPostAction(formData: FormData): Promise<void> {
   await requireAuth();
   const id = formData.get("id") as string;
   if (id) {
+    const existing = await db
+      .select({ slug: blogPosts.slug, title: blogPosts.title })
+      .from(blogPosts)
+      .where(eq(blogPosts.id, id))
+      .limit(1);
     await db.delete(blogPosts).where(eq(blogPosts.id, id));
+    if (existing[0]) {
+      await logAction("delete", "blog", id, existing[0].title);
+      revalidatePath(`/blog/${existing[0].slug}`);
+    }
     revalidatePath("/");
     revalidatePath("/blog");
   }

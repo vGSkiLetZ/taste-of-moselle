@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect, useRef, useCallback } from "react";
+import { useActionState, useState, useEffect, useRef } from "react";
 import { BLOG_PILLARS } from "@/lib/constants";
 import { slugify } from "@/lib/utils";
 import type { BlogPost } from "@/lib/types";
@@ -22,12 +22,14 @@ export default function BlogPostForm({ action, post }: BlogPostFormProps) {
   const [state, formAction, isPending] = useActionState(action, null);
   const [title, setTitle] = useState(post?.title || "");
   const [slug, setSlug] = useState(post?.slug || "");
+  const [content, setContent] = useState(post?.content || "");
   const [coverUrl, setCoverUrl] = useState(post?.coverImage?.url || "");
   const [statusValue, setStatusValue] = useState(post?.status || "draft");
   const [lastSaved, setLastSaved] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!post) setSlug(slugify(title));
   }, [title, post]);
 
@@ -41,9 +43,12 @@ export default function BlogPostForm({ action, post }: BlogPostFormProps) {
     if (saved && !post) {
       try {
         const data = JSON.parse(saved);
+        /* eslint-disable react-hooks/set-state-in-effect */
         if (data.title) setTitle(data.title);
         if (data.slug) setSlug(data.slug);
+        if (data.content) setContent(data.content);
         setLastSaved("Brouillon restauré");
+        /* eslint-enable react-hooks/set-state-in-effect */
       } catch {}
     }
 
@@ -136,7 +141,8 @@ export default function BlogPostForm({ action, post }: BlogPostFormProps) {
         <label className={labelClass}>Contenu *</label>
         <TiptapEditor
           name="content"
-          value={post?.content || ""}
+          value={content}
+          onChange={setContent}
         />
       </div>
 

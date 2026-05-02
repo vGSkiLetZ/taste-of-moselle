@@ -23,14 +23,12 @@ export default function SwipeNavigation({
   const touchStartY = useRef(0);
   const [swipeDir, setSwipeDir] = useState<"left" | "right" | null>(null);
   const [swiping, setSwiping] = useState(false);
-  const [deltaX, setDeltaX] = useState(0);
   const threshold = 80;
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     setSwiping(true);
-    setDeltaX(0);
     setSwipeDir(null);
   };
 
@@ -43,7 +41,6 @@ export default function SwipeNavigation({
       setSwiping(false);
       return;
     }
-    setDeltaX(dx);
     if (dx > threshold && prevSlug) setSwipeDir("right");
     else if (dx < -threshold && nextSlug) setSwipeDir("left");
     else setSwipeDir(null);
@@ -56,7 +53,6 @@ export default function SwipeNavigation({
       router.push(`/adresses/${nextSlug}`);
     }
     setSwiping(false);
-    setDeltaX(0);
     setSwipeDir(null);
   };
 

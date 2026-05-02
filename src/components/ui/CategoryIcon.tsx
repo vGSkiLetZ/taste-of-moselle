@@ -1,4 +1,4 @@
-import { Utensils, Wine, Wheat, Briefcase, Coffee, ChefHat } from "lucide-react";
+import { Utensils, Wine, Wheat, Coffee, ChefHat } from "lucide-react";
 import type { Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
 

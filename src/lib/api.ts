@@ -1,7 +1,7 @@
 import type { Adresse, BlogPost, BlogPillar, ImageAsset, BudgetLevel, Category, GeoZone } from "./types";
 import { db } from "./db";
 import { adresses, adresseGallery, blogPosts } from "./db/schema";
-import { eq, desc, asc, sql, or, and, lte } from "drizzle-orm";
+import { eq, desc, asc, sql, or, and, lte, gt, lt } from "drizzle-orm";
 
 // ===== Row → Interface Helpers =====
 
@@ -105,6 +105,34 @@ export async function getFeaturedAdresses(limit = 4): Promise<Adresse[]> {
     .orderBy(desc(adresses.tastyScore))
     .limit(limit);
   return rows.map((r) => rowToAdresse(r));
+}
+
+export interface AdjacentAdresse {
+  slug: string;
+  name: string;
+}
+
+export async function getAdjacentAdresses(
+  currentName: string
+): Promise<{ prev: AdjacentAdresse | null; next: AdjacentAdresse | null }> {
+  const [prevRow, nextRow] = await Promise.all([
+    db
+      .select({ slug: adresses.slug, name: adresses.name })
+      .from(adresses)
+      .where(lt(adresses.name, currentName))
+      .orderBy(desc(adresses.name))
+      .limit(1),
+    db
+      .select({ slug: adresses.slug, name: adresses.name })
+      .from(adresses)
+      .where(gt(adresses.name, currentName))
+      .orderBy(asc(adresses.name))
+      .limit(1),
+  ]);
+  return {
+    prev: prevRow[0] ?? null,
+    next: nextRow[0] ?? null,
+  };
 }
 
 // ===== Blog Posts =====

@@ -2,7 +2,7 @@ import { requireAuth } from "@/lib/admin/auth";
 import AdminNav from "@/components/admin/AdminNav";
 import { db } from "@/lib/db";
 import { pageViews, adresses, blogPosts } from "@/lib/db/schema";
-import { sql, eq, desc, and, gte } from "drizzle-orm";
+import { sql, eq, desc, gte } from "drizzle-orm";
 import { BarChart3, Eye, TrendingUp } from "lucide-react";
 
 export const dynamic = "force-dynamic";

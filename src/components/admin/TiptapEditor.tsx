@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TiptapLink from "@tiptap/extension-link";
@@ -54,7 +55,14 @@ export default function TiptapEditor({ name, value, onChange }: TiptapEditorProp
     onUpdate: ({ editor }) => {
       onChange?.(editor.getHTML());
     },
+    immediatelyRender: false,
   });
+
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value, { emitUpdate: false });
+    }
+  }, [editor, value]);
 
   if (!editor) return null;
 
@@ -128,8 +136,8 @@ export default function TiptapEditor({ name, value, onChange }: TiptapEditorProp
       {/* Editor */}
       <EditorContent editor={editor} />
 
-      {/* Hidden input for form submission */}
-      <input type="hidden" name={name} value={editor.getHTML()} />
+      {/* Hidden input for form submission — controlled by parent value */}
+      <input type="hidden" name={name} value={value} readOnly />
     </div>
   );
 }

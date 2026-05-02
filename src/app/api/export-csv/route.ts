@@ -19,11 +19,11 @@ export async function GET() {
     "phone", "website", "reservationUrl", "openingHours", "tags", "publishedAt",
   ];
 
-  const csvRows = [headers.join(",")];
+  const csvRows = [headers.map(csvField).join(",")];
 
   for (const a of allAdresses) {
     const row = [
-      escapeCsv(a.name),
+      a.name,
       a.slug,
       a.category,
       a.geoZone,
@@ -33,22 +33,23 @@ export async function GET() {
       a.scoreAssiette,
       a.scoreCadre,
       a.scoreRapportQP,
-      escapeCsv(a.petitPlus),
-      escapeCsv(a.description),
-      escapeCsv(a.address),
+      a.petitPlus,
+      a.description,
+      a.address,
       a.lat,
       a.lng,
       a.phone || "",
       a.website || "",
       a.reservationUrl || "",
-      escapeCsv(a.openingHours || ""),
+      a.openingHours || "",
       a.tags,
       a.publishedAt,
     ];
-    csvRows.push(row.join(","));
+    csvRows.push(row.map(csvField).join(","));
   }
 
-  const csv = csvRows.join("\n");
+  // Excel-on-Windows wants UTF-8 BOM + CRLF line endings.
+  const csv = "﻿" + csvRows.join("\r\n");
 
   return new NextResponse(csv, {
     headers: {
@@ -58,9 +59,16 @@ export async function GET() {
   });
 }
 
-function escapeCsv(value: string): string {
-  if (value.includes(",") || value.includes('"') || value.includes("\n")) {
-    return `"${value.replace(/"/g, '""')}"`;
+function csvField(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  let s = String(value);
+  // Defang formula injection: =, +, -, @, TAB, CR cells starting with these
+  // are interpreted as formulas in Excel/LibreOffice.
+  if (/^[=+\-@\t\r]/.test(s)) {
+    s = "'" + s;
   }
-  return value;
+  if (s.includes(",") || s.includes('"') || s.includes("\n") || s.includes("\r")) {
+    return `"${s.replace(/"/g, '""')}"`;
+  }
+  return s;
 }

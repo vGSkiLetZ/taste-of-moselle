@@ -50,19 +50,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  color: var(--color-moselle-text);
-  line-height: 1.1;
-  letter-spacing: 0.01em;
-}
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--color-moselle-text);
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+  }
 
-h1 {
-  font-weight: 700;
-}
+  h1 {
+    font-weight: 700;
+  }
 
-h2 {
-  font-weight: 600;
+  h2 {
+    font-weight: 600;
+  }
 }
 
 /* Italic Playfair emphasis — for "Taste of" branding and accent titles */

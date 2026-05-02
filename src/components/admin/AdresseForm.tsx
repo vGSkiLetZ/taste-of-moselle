@@ -25,6 +25,7 @@ export default function AdresseForm({ action, adresse }: AdresseFormProps) {
   );
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!adresse) setSlug(slugify(name));
   }, [name, adresse]);
 

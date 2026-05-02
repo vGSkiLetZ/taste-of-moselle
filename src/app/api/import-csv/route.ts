@@ -12,7 +12,10 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const text = await request.text();
+    let text = await request.text();
+    // Strip UTF-8 BOM if present, normalize CRLF/CR to LF.
+    if (text.charCodeAt(0) === 0xfeff) text = text.slice(1);
+    text = text.replace(/\r\n?/g, "\n");
     const lines = text.split("\n").filter((l) => l.trim());
 
     if (lines.length < 2) {
@@ -33,6 +36,7 @@ export async function POST(request: NextRequest) {
 
     let success = 0;
     const errors: string[] = [];
+    const seenSlugs = new Set<string>();
 
     for (let i = 1; i < lines.length; i++) {
       const values = parseCsvLine(lines[i]);
@@ -52,6 +56,13 @@ export async function POST(request: NextRequest) {
         continue;
       }
 
+      const slug = slugify(name);
+      if (seenSlugs.has(slug)) {
+        errors.push(`Ligne ${i + 1} (${name}): slug "${slug}" déjà utilisé dans cet import`);
+        continue;
+      }
+      seenSlugs.add(slug);
+
       const scoreAccueil = Number(row["scoreaccueil"]) || 7;
       const scoreAssiette = Number(row["scoreassiette"]) || 7;
       const scoreCadre = Number(row["scorecadre"]) || 7;
@@ -61,7 +72,7 @@ export async function POST(request: NextRequest) {
       try {
         await db.insert(adresses).values({
           id: crypto.randomUUID().slice(0, 8),
-          slug: slugify(name),
+          slug,
           name,
           category: row["category"] || "brasserie",
           geoZone: row["geozone"] || "metz",
@@ -84,8 +95,9 @@ export async function POST(request: NextRequest) {
           publishedAt: new Date().toISOString().split("T")[0],
         });
         success++;
-      } catch (e: any) {
-        errors.push(`Ligne ${i + 1} (${name}): ${e.message}`);
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : "erreur inconnue";
+        errors.push(`Ligne ${i + 1} (${name}): ${message}`);
       }
     }
 

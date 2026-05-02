@@ -3,7 +3,7 @@ import { CATEGORIES, GEO_ZONES } from "@/lib/constants";
 import { formatBudget } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Star } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import TastyScore from "@/components/ui/TastyScore";
 import type { Metadata } from "next";
 

@@ -6,8 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { CATEGORIES, GEO_ZONES, BUDGET_LABELS } from "@/lib/constants";
 import { useFilters, type FilterState } from "@/hooks/useFilters";
-import Badge from "@/components/ui/Badge";
-import Button from "@/components/ui/Button";
 import CategoryIcon from "@/components/ui/CategoryIcon";
 import type { Category } from "@/lib/types";
 
@@ -58,17 +56,61 @@ export default function AdresseFilters({ totalResults }: AdresseFiltersProps) {
       </div>
 
       {/* Desktop filters (always visible) + Mobile filters (collapsible) */}
-      <AnimatePresence>
-        {(showMobileFilters || true) && (
+      <AnimatePresence initial={false}>
+        {showMobileFilters && (
           <motion.div
+            key="mobile-filters"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className={cn(
-              "space-y-4 overflow-hidden",
-              !showMobileFilters && "hidden md:block"
-            )}
+            className="space-y-4 overflow-hidden md:hidden"
           >
+            <FiltersBody
+              filters={filters}
+              setFilter={setFilter}
+              resetFilters={resetFilters}
+              toggleCategory={toggleCategory}
+              hasActiveFilters={hasActiveFilters}
+              totalResults={totalResults}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop filters always rendered */}
+      <div className="hidden md:block space-y-4">
+        <FiltersBody
+          filters={filters}
+          setFilter={setFilter}
+          resetFilters={resetFilters}
+          toggleCategory={toggleCategory}
+          hasActiveFilters={hasActiveFilters}
+          totalResults={totalResults}
+        />
+      </div>
+    </div>
+  );
+}
+
+interface FiltersBodyProps {
+  filters: FilterState;
+  setFilter: (key: keyof FilterState, value: string | number) => void;
+  resetFilters: () => void;
+  toggleCategory: (category: Category) => void;
+  hasActiveFilters: boolean | string | number;
+  totalResults: number;
+}
+
+function FiltersBody({
+  filters,
+  setFilter,
+  resetFilters,
+  toggleCategory,
+  hasActiveFilters,
+  totalResults,
+}: FiltersBodyProps) {
+  return (
+    <>
             {/* Categories */}
             <div>
               <h3 className="text-sm font-semibold text-moselle-text-light mb-2">
@@ -174,13 +216,10 @@ export default function AdresseFilters({ totalResults }: AdresseFiltersProps) {
               )}
             </div>
 
-            {/* Results count (desktop) */}
-            <p className="hidden md:block text-sm text-moselle-text-light">
-              {totalResults} résultat{totalResults !== 1 ? "s" : ""}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+      {/* Results count (desktop) */}
+      <p className="hidden md:block text-sm text-moselle-text-light">
+        {totalResults} résultat{totalResults !== 1 ? "s" : ""}
+      </p>
+    </>
   );
 }

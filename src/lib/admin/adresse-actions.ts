@@ -6,7 +6,8 @@ import { db } from "@/lib/db";
 import { adresses, adresseGallery } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { requireAuth } from "./auth";
-import { slugify } from "@/lib/utils";
+import { ensureUniqueSlug } from "./slug";
+import { logAction } from "./log";
 
 export async function createAdresseAction(
   _prevState: { error?: string } | null,
@@ -24,7 +25,8 @@ export async function createAdresseAction(
   const tastyScore = Math.round(((scoreAccueil + scoreAssiette + scoreCadre + scoreRapportQP) / 4) * 10) / 10;
 
   const id = crypto.randomUUID().slice(0, 8);
-  const slug = formData.get("slug") as string || slugify(name);
+  const desiredSlug = (formData.get("slug") as string) || name;
+  const slug = await ensureUniqueSlug("adresses", desiredSlug, { fallbackSource: name });
 
   try {
     await db.insert(adresses).values({
@@ -70,12 +72,15 @@ export async function createAdresseAction(
         });
       }
     }
-  } catch (e: any) {
-    return { error: e.message || "Erreur lors de la creation" };
+    await logAction("create", "adresse", id, name);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "Erreur lors de la creation";
+    return { error: message };
   }
 
   revalidatePath("/");
   revalidatePath("/adresses");
+  revalidatePath(`/adresses/${slug}`);
   revalidatePath("/carte");
   redirect("/admin/adresses");
 }
@@ -98,11 +103,17 @@ export async function updateAdresseAction(
   const scoreRapportQP = Number(formData.get("scoreRapportQP")) || 0;
   const tastyScore = Math.round(((scoreAccueil + scoreAssiette + scoreCadre + scoreRapportQP) / 4) * 10) / 10;
 
+  const desiredSlug = (formData.get("slug") as string) || name;
+  const slug = await ensureUniqueSlug("adresses", desiredSlug, {
+    fallbackSource: name,
+    excludeId: id,
+  });
+
   try {
     await db
       .update(adresses)
       .set({
-        slug: (formData.get("slug") as string) || slugify(name),
+        slug,
         name,
         category: formData.get("category") as string,
         geoZone: formData.get("geoZone") as string,
@@ -146,12 +157,15 @@ export async function updateAdresseAction(
         });
       }
     }
-  } catch (e: any) {
-    return { error: e.message || "Erreur lors de la mise a jour" };
+    await logAction("update", "adresse", id, name);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "Erreur lors de la mise a jour";
+    return { error: message };
   }
 
   revalidatePath("/");
   revalidatePath("/adresses");
+  revalidatePath(`/adresses/${slug}`);
   revalidatePath("/carte");
   redirect("/admin/adresses");
 }
@@ -160,7 +174,16 @@ export async function deleteAdresseAction(formData: FormData): Promise<void> {
   await requireAuth();
   const id = formData.get("id") as string;
   if (id) {
+    const existing = await db
+      .select({ slug: adresses.slug, name: adresses.name })
+      .from(adresses)
+      .where(eq(adresses.id, id))
+      .limit(1);
     await db.delete(adresses).where(eq(adresses.id, id));
+    if (existing[0]) {
+      await logAction("delete", "adresse", id, existing[0].name);
+      revalidatePath(`/adresses/${existing[0].slug}`);
+    }
     revalidatePath("/");
     revalidatePath("/adresses");
     revalidatePath("/carte");

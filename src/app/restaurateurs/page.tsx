@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle, Star, Users, TrendingUp, Mail } from "lucide-react";
+import { Star, Users, TrendingUp, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Pour les restaurateurs",

@@ -4,6 +4,7 @@ import { drizzle } from "drizzle-orm/libsql";
 import * as schema from "../src/lib/db/schema";
 import adressesData from "../src/data/adresses.json";
 import blogPostsData from "../src/data/blog-posts.json";
+import type { Adresse, BlogPost } from "../src/lib/types";
 
 const client = createClient({
   url: process.env.TURSO_DATABASE_URL!,
@@ -15,7 +16,7 @@ const db = drizzle(client, { schema });
 async function seed() {
   console.log("Seeding adresses...");
 
-  for (const a of adressesData as any[]) {
+  for (const a of adressesData as Adresse[]) {
     await db.insert(schema.adresses).values({
       id: a.id,
       slug: a.slug,
@@ -65,7 +66,7 @@ async function seed() {
 
   console.log("\nSeeding blog posts...");
 
-  for (const p of blogPostsData as any[]) {
+  for (const p of blogPostsData as BlogPost[]) {
     await db.insert(schema.blogPosts).values({
       id: p.id,
       slug: p.slug,

@@ -5,10 +5,10 @@ import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, AlertTriangle } from "lucide-react";
-import type { BlogPillar } from "@/lib/types";
+import { AlertTriangle } from "lucide-react";
 import { BLOG_PILLARS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -70,7 +70,7 @@ export default async function PreviewBlogPage({ params }: { params: Promise<{ sl
       <article className="max-w-4xl mx-auto px-4 py-8">
         <div
           className="prose prose-lg max-w-none text-moselle-text"
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
         />
       </article>
     </>

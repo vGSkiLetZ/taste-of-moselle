@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { Instagram } from "lucide-react";
 import AnimatedDivider from "@/components/ui/AnimatedDivider";
-import Image from "next/image";
 
 // Placeholder posts — these would be replaced with real Instagram embed or API
 const placeholderPosts = [

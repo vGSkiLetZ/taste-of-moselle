@@ -14,11 +14,10 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import type { Adresse } from "@/lib/types";
-import { MAP_CENTER, MAP_DEFAULT_ZOOM, CATEGORIES, BUDGET_LABELS } from "@/lib/constants";
+import { MAP_CENTER, MAP_DEFAULT_ZOOM, BUDGET_LABELS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import TastyScore from "@/components/ui/TastyScore";
-import CategoryIcon from "@/components/ui/CategoryIcon";
 import { Layers, MapPin as MapPinIcon } from "lucide-react";
 
 interface TastyMapProps {
@@ -68,12 +67,14 @@ function FlyToHighlight({ adresses, highlightSlug }: { adresses: Adresse[]; high
   return null;
 }
 
-function MapControls({ satellite, onToggleSatellite, radius, onRadiusChange, userPos }: {
+function MapControls({ satellite, onToggleSatellite, radius, onRadiusChange, userPos, onLocate, locating }: {
   satellite: boolean;
   onToggleSatellite: () => void;
   radius: number;
   onRadiusChange: (r: number) => void;
   userPos: { lat: number; lng: number } | null;
+  onLocate: () => void;
+  locating: boolean;
 }) {
   return (
     <div className="absolute top-3 right-3 z-[1000] flex flex-col gap-2">
@@ -84,6 +85,16 @@ function MapControls({ satellite, onToggleSatellite, radius, onRadiusChange, use
       >
         <Layers size={18} className="text-moselle-text" />
       </button>
+      {!userPos && (
+        <button
+          onClick={onLocate}
+          disabled={locating}
+          className="w-10 h-10 bg-white rounded-xl shadow-lg flex items-center justify-center hover:bg-moselle-cream transition-colors disabled:opacity-50"
+          title="Me localiser"
+        >
+          <MapPinIcon size={18} className="text-moselle-text" />
+        </button>
+      )}
       {userPos && (
         <select
           value={radius}
@@ -106,14 +117,25 @@ export default function TastyMap({ adresses, highlightSlug, className }: TastyMa
   const [satellite, setSatellite] = useState(false);
   const [radius, setRadius] = useState(0);
   const [userPos, setUserPos] = useState<{ lat: number; lng: number } | null>(null);
+  const [locating, setLocating] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    navigator.geolocation?.getCurrentPosition(
-      (pos) => setUserPos({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      () => {}
-    );
   }, []);
+
+  const requestLocation = () => {
+    if (!navigator.geolocation) return;
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setLocating(false);
+      },
+      () => setLocating(false),
+      { timeout: 10000 }
+    );
+  };
 
   if (!mounted) {
     return (
@@ -130,6 +152,8 @@ export default function TastyMap({ adresses, highlightSlug, className }: TastyMa
         radius={radius}
         onRadiusChange={setRadius}
         userPos={userPos}
+        onLocate={requestLocation}
+        locating={locating}
       />
       <MapContainer
         center={[MAP_CENTER.lat, MAP_CENTER.lng]}

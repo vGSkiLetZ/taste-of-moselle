@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MessageCircle, Send, User } from "lucide-react";
+import { Send, User } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 interface Comment {

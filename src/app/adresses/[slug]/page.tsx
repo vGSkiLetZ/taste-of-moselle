@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MapPin, Phone, ExternalLink, Clock, ArrowLeft } from "lucide-react";
-import { getAllAdresses, getAdresseBySlug } from "@/lib/api";
+import { getAllAdresses, getAdresseBySlug, getAdjacentAdresses } from "@/lib/api";
 import { CATEGORIES, GEO_ZONES } from "@/lib/constants";
 import { generateRestaurantSchema, generateReviewSchema } from "@/lib/seo";
 import Badge, { BudgetBadge } from "@/components/ui/Badge";
@@ -59,11 +58,8 @@ export default async function AdresseDetailPage({
   const adresse = await getAdresseBySlug(slug);
   if (!adresse) notFound();
 
-  // Get adjacent addresses for swipe navigation
-  const allAdresses = await getAllAdresses();
-  const currentIndex = allAdresses.findIndex((a) => a.slug === slug);
-  const prevAdresse = currentIndex > 0 ? allAdresses[currentIndex - 1] : null;
-  const nextAdresse = currentIndex < allAdresses.length - 1 ? allAdresses[currentIndex + 1] : null;
+  // Get adjacent addresses for swipe navigation (alphabetical by name).
+  const { prev: prevAdresse, next: nextAdresse } = await getAdjacentAdresses(adresse.name);
 
   const category = CATEGORIES.find((c) => c.value === adresse.category);
   const zone = GEO_ZONES.find((z) => z.value === adresse.geoZone);
@@ -123,7 +119,14 @@ export default async function AdresseDetailPage({
               </Badge>
               <BudgetBadge level={adresse.budget} className="text-lg" />
             </div>
-            <h1 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight [text-shadow:_0_2px_12px_rgba(0,0,0,0.4)]">
+            <h1
+              className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight"
+              style={{
+                color: "#ffffff",
+                textShadow:
+                  "0 3px 16px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.9)",
+              }}
+            >
               {adresse.name}
             </h1>
           </div>
