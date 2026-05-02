@@ -48,7 +48,7 @@ export default async function PreviewBlogPage({ params }: { params: Promise<{ sl
           fill
           priority
           sizes="100vw"
-          className="object-cover"
+          className="object-cover vintage-img"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-moselle-text/70 via-transparent to-transparent" />
         <div className="absolute bottom-6 left-0 right-0 px-4">

@@ -84,7 +84,7 @@ export default function ImageGallery({ images, className }: ImageGalleryProps) {
                 alt={img.alt}
                 fill
                 sizes="(max-width: 640px) 33vw, 150px"
-                className="object-cover transition-transform duration-300 group-hover:scale-110"
+                className="object-cover transition-transform duration-300 group-hover:scale-110 vintage-img"
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
             </button>

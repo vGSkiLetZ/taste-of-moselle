@@ -148,6 +148,34 @@ export default async function BlogPostPage({
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
         />
 
+        {/* Author bio */}
+        <div className="mt-10 pt-8 border-t border-moselle-cream-dark">
+          <div className="flex items-start gap-4 bg-moselle-cream/40 rounded-2xl p-5">
+            <div className="shrink-0 w-14 h-14 rounded-full bg-moselle-green text-white flex items-center justify-center font-[family-name:var(--font-heading)] font-bold text-xl">
+              {post.author
+                .split(/\s+/)
+                .map((w) => w[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase()}
+            </div>
+            <div>
+              <p className="font-[family-name:var(--font-accent)] text-2xl text-moselle-green leading-tight">
+                {post.author}
+              </p>
+              <p className="font-[family-name:var(--font-body)] italic text-sm text-moselle-text-light mt-1">
+                Deux amoureux du terroir mosellan, en quête des meilleures tables, producteurs et petites pépites de la région.
+              </p>
+              <Link
+                href="/a-propos"
+                className="inline-flex items-center gap-1 mt-2 text-sm text-moselle-green hover:text-moselle-green-light transition-colors font-semibold"
+              >
+                À propos →
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* Related addresses */}
         {relatedAdresses.filter(Boolean).length > 0 && (
           <div className="mt-10 pt-8 border-t-2 border-moselle-cream-dark">

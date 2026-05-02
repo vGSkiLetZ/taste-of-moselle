@@ -44,7 +44,7 @@ export default function HoverPreview({ adresse, children }: HoverPreviewProps) {
               src={adresse.coverImage.url}
               alt={adresse.coverImage.alt}
               fill
-              className="object-cover"
+              className="object-cover vintage-img"
               sizes="288px"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />

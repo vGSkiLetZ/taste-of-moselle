@@ -81,7 +81,8 @@ body {
 }
 
 /* Decorative drop cap for article/blog first paragraphs */
-.drop-cap::first-letter {
+.drop-cap::first-letter,
+.blog-content > p:first-of-type::first-letter {
   font-family: var(--font-heading);
   font-size: 3.5em;
   font-weight: 700;
@@ -90,6 +91,60 @@ body {
   margin-right: 0.1em;
   margin-top: 0.05em;
   color: var(--color-moselle-green);
+}
+
+/* Editorial spacing for HTML blog content (Tiptap output) */
+.blog-content p {
+  margin-bottom: 1.25rem;
+  line-height: 1.75;
+}
+.blog-content h2 {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-moselle-text);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+.blog-content h3 {
+  font-family: var(--font-heading);
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--color-moselle-text);
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+.blog-content blockquote {
+  border-left: 3px solid var(--color-moselle-green);
+  padding: 0.5rem 0 0.5rem 1.25rem;
+  margin: 1.5rem 0;
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--color-moselle-text-light);
+}
+.blog-content ul, .blog-content ol {
+  margin: 1.25rem 0;
+  padding-left: 1.5rem;
+}
+.blog-content ul { list-style-type: disc; }
+.blog-content ol { list-style-type: decimal; }
+.blog-content li { margin-bottom: 0.5rem; }
+.blog-content a {
+  color: var(--color-moselle-green);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.blog-content img {
+  border-radius: var(--radius-card);
+  margin: 1.5rem 0;
+  max-width: 100%;
+  height: auto;
+}
+.blog-content hr {
+  border: 0;
+  border-top: 1px solid var(--color-moselle-cream-dark);
+  margin: 2rem 0;
 }
 
 /* Stylized pull quote for editorial content */
@@ -183,9 +238,11 @@ body {
 .card-hover-lift {
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.card-hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-card-hover);
+@media (hover: hover) {
+  .card-hover-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 32px -8px rgba(61, 46, 31, 0.22);
+  }
 }
 
 /* Button press animation */

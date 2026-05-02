@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { Clock } from "lucide-react";
+import { Clock, BookOpen, Users, Compass } from "lucide-react";
 import { getAllBlogPosts } from "@/lib/api";
 import { BLOG_PILLARS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
@@ -42,17 +42,46 @@ export default async function BlogPage() {
       </section>
 
       <section className="max-w-7xl mx-auto px-4 py-8">
-        {/* Pillar filters */}
-        <div className="flex flex-wrap gap-3 mb-8">
-          {BLOG_PILLARS.map((pillar) => (
-            <div
-              key={pillar.value}
-              className="px-4 py-2 bg-moselle-cream rounded-full text-sm"
-            >
-              <span className="font-semibold text-moselle-text">{pillar.label}</span>
-              <span className="text-moselle-text-light"> — {pillar.description}</span>
-            </div>
-          ))}
+        {/* Pillar cards — illustrated category overview */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+          {BLOG_PILLARS.map((pillar) => {
+            const config: Record<string, { Icon: typeof BookOpen; tone: string; iconBg: string }> = {
+              "dossier-thematique": {
+                Icon: BookOpen,
+                tone: "border-moselle-green/30 bg-moselle-green/5 hover:bg-moselle-green/10",
+                iconBg: "bg-moselle-green text-white",
+              },
+              rencontre: {
+                Icon: Users,
+                tone: "border-moselle-brown/30 bg-moselle-brown/5 hover:bg-moselle-brown/10",
+                iconBg: "bg-moselle-brown text-white",
+              },
+              echappee: {
+                Icon: Compass,
+                tone: "border-moselle-blue/30 bg-moselle-blue/5 hover:bg-moselle-blue/10",
+                iconBg: "bg-moselle-blue text-white",
+              },
+            };
+            const { Icon, tone, iconBg } = config[pillar.value] ?? config["dossier-thematique"];
+            return (
+              <div
+                key={pillar.value}
+                className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-colors ${tone}`}
+              >
+                <div className={`shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${iconBg}`}>
+                  <Icon size={22} strokeWidth={2} />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-[family-name:var(--font-heading)] font-bold text-lg text-moselle-text leading-tight">
+                    {pillar.label}
+                  </h3>
+                  <p className="text-sm text-moselle-text-light italic leading-snug">
+                    {pillar.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* Featured article (first) */}

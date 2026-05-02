@@ -37,7 +37,8 @@ export default function HeroSection() {
         </video>
         {/* Animated gradient overlay */}
         <div className="absolute inset-0 hero-gradient-animated" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-moselle-cream" />
+        {/* Bottom anchor: stronger fade so CTAs and search read crisply over busy footage */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/15 to-moselle-cream" />
       </motion.div>
 
       {/* Content */}
@@ -45,20 +46,10 @@ export default function HeroSection() {
         style={{ opacity }}
         className="relative z-10 max-w-7xl mx-auto px-4 py-20 text-center"
       >
-        {/* Staggered entrance animations */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="font-[family-name:var(--font-accent)] text-xl sm:text-2xl text-moselle-cream/80 mb-4 drop-shadow-md"
-        >
-          Bienvenue en Moselle
-        </motion.p>
-
         <motion.h1
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           className="font-[family-name:var(--font-heading)] text-5xl sm:text-6xl md:text-8xl font-extrabold mb-4 leading-[0.95] tracking-tight [text-shadow:_0_3px_20px_rgba(0,0,0,0.6)]"
         >
           <span className="text-moselle-cream italic">Taste of</span>
@@ -69,7 +60,7 @@ export default function HeroSection() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.5 }}
+          transition={{ duration: 0.7, delay: 0.4 }}
           className="font-[family-name:var(--font-accent)] text-3xl sm:text-4xl text-moselle-cream mb-3 drop-shadow-md"
         >
           Le guide gourmand de la Moselle
@@ -78,35 +69,37 @@ export default function HeroSection() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
           className="font-[family-name:var(--font-body)] italic text-base sm:text-lg text-white/90 max-w-xl mx-auto mb-8 drop-shadow-md"
         >
           Les meilleures adresses, testées et approuvées par deux amoureux du terroir mosellan.
         </motion.p>
 
-        {/* Search bar */}
+        {/* Search bar — stacked on mobile, inline on desktop */}
         <motion.form
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.85 }}
+          transition={{ duration: 0.8, delay: 0.75 }}
           onSubmit={(e) => {
             e.preventDefault();
             if (search.trim()) router.push(`/adresses?q=${encodeURIComponent(search.trim())}`);
             else router.push("/adresses");
           }}
-          className="max-w-lg mx-auto mb-6 relative"
+          className="max-w-lg mx-auto mb-6 flex flex-col sm:flex-row gap-2 sm:gap-0 sm:relative"
         >
-          <Search size={20} className="absolute left-5 top-1/2 -translate-y-1/2 text-moselle-text-light" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher un restaurant, un plat..."
-            className="w-full pl-13 pr-28 py-4 rounded-full bg-white/95 backdrop-blur-md text-moselle-text placeholder:text-moselle-text-light/60 shadow-xl focus:outline-none focus:ring-2 focus:ring-moselle-green text-base"
-          />
+          <div className="relative flex-1">
+            <Search size={20} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-moselle-text-light" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Restaurant, plat, ville…"
+              className="w-full pl-12 pr-4 sm:pr-32 py-4 rounded-full bg-white/95 backdrop-blur-md text-moselle-text placeholder:text-moselle-text-light/60 shadow-xl focus:outline-none focus:ring-2 focus:ring-moselle-green text-base"
+            />
+          </div>
           <button
             type="submit"
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-moselle-green text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-moselle-green-light transition-colors"
+            className="sm:absolute sm:right-2 sm:top-1/2 sm:-translate-y-1/2 bg-moselle-green text-white px-5 py-3 sm:py-2.5 rounded-full text-sm font-semibold hover:bg-moselle-green-light transition-colors shadow-lg sm:shadow-none"
           >
             Chercher
           </button>
